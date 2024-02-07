@@ -11,6 +11,6 @@ The app is broken down into several sections:
 
 ## Overview of Frontend/ Backend canisters 
 
-![Canister Layout](221BravoApp.png)
+![Canister Layout](221BravoApp.jpg)
 
  
