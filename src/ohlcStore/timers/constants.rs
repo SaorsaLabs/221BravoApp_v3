@@ -1,0 +1,5 @@
+pub const M5_AS_NANOS: u64 = 300_000_000_000;
+pub const M15_AS_NANOS: u64 = 900_000_000_000;
+pub const H1_AS_NANOS: u64 = 3_600_000_000_000;
+pub const D1_AS_NANOS: u64 = 86_400_000_000_000;
+pub const W1_AS_NANOS: u64 = 604_800_000_000_000;
