@@ -1,0 +1,82 @@
+
+type UserData = record { user_account: text; user_name: text; user_tokens: nat32; }; 
+type HolderData = record { nat32; text; }; 
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+type LogEntry = record {timestamp: text; text: text};
+type AddressEntry = record {text; text; text}; // owner, saved account, saved name; 
+type PublicAddressEntry = record {text; text}; // saved account, saved name;
+type backup = record {text; text; text};
+type TokenData = record {
+    cross: text; 
+    ledger: text;
+    decimals: nat8;
+    change24: float64;
+    change7d: float64;
+    price: float64;
+    supply: float64;
+    mcap: float64;
+    sparkline: vec float64;
+};
+type SentRecData = record {nat32; nat};
+
+type Overview = record {
+    first_active: nat64;
+    last_active: nat64;
+    sent: SentRecData;
+    received: SentRecData;
+    balance: nat;
+};
+
+type HolderBalanceResponse = record {
+    holder: text;
+    data: Overview;
+};
+
+type TopHolderData = record {
+    cross: text;
+    stats221: text;
+    accounts: vec HolderBalanceResponse;
+    principals: vec HolderBalanceResponse;
+};
+
+service : (text) -> {
+    // Canister Management (admin gated)
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    
+    // Canister Management (not gated)
+    "get_cycles_balance": () -> (nat64) query;
+    "deposit_cycles": () -> ();
+    "canister_version": () -> (text) query;
+
+    // User Services (admin gate)
+    "get_user_data": (text) -> (opt UserData) query;
+    "get_user_named_accounts": (text, vec text) -> (opt vec PublicAddressEntry) query;   // owner ac, vec acs -> (ac, name)
+    "get_all_user_named_accounts": (text) -> (opt vec PublicAddressEntry) query;
+    "add_user_named_accounts": (text, text, text) -> (text);   // owner a/c, save a/c, save name;
+    "remove_user_named_account": (text, text) -> (text); // owner a/c, save a/c;
+    "get_public_named_accounts": (vec text) -> (opt vec PublicAddressEntry) query; 
+    "add_public_named_accounts": (text, text) -> (text); // save a/c, save name;
+    "remove_public_named_account": (text) -> (text); // save a/c;
+    "add_new_user": (text) -> (text);
+    "update_username": (text, text) -> (text);
+    "update_user_tokens": (text, nat32) -> (text);
+    
+    // account tools (authorised gate)
+    "get_single_account": (text, nat32) -> (text) query;
+    "get_multiple_account": (text, nat32, nat32) -> (vec text) query;
+    
+
+    // timers
+    "start_quotes_timer": (nat64, nat64, nat64) -> (text); // price timer, icrc supply timer, top holder timer
+    "stop_all_timers": () -> (text);
+
+    // top token methods
+    "add_token_to_processing_list": (text, text, nat8, text) -> (text); // cross, ledger, decimals, stats221
+    "remove_token_from_processing_list": (text) -> (text);
+    "get_top_tokens_data": () -> (vec TokenData) query;
+    "get_top_holders": (text) -> (opt TopHolderData) query;
+}
