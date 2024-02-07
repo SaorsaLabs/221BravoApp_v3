@@ -1,6 +1,6 @@
 # Canister Templates - Guide
 
-Modular_IC_Stable_Memory and Modular_IC_Stable_Structures are two templates uses by 221Bravo App when building canister smart contracts. 
+Modular_IC_Stable_Memory and Modular_IC_Stable_Structures are two templates used by 221Bravo App when building canister smart contracts. 
 
 These templates have been built to be modular to make it easier to add features such as HTTPS Outcalls, timers or your own custom functions. Each template can use stable storage – either using the IC Stable Memory crate (https://docs.rs/ic-stable-memory/latest/ic_stable_memory/mem/index.html) or using IC Stable Structures (https://docs.rs/ic-stable-structures/latest/ic_stable_structures/)
 Each template has a core module which has the minimum functionality required to create a canister with admin/ authorised users, event logging and cycles/ memory queries. 
@@ -21,7 +21,7 @@ Authorised users can be used to provide access to gated (non-admin) functions wh
 
 You can give everyone access to an authorised/ admin method by adding the anonymous principal (2vxsx-fae) to the list of admin/ authorised users. This can be useful if you want to only give access at certain times. 
 
-To gate a custom function you have crated – simple add 
+To gate a custom function you have crated – simple add
 `RUNTIME_STATE.with(|s| {
         s.borrow().data.check_admin(ic_cdk::caller().to_text());
     });`

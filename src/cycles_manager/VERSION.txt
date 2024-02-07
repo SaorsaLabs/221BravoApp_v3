@@ -1,4 +1,0 @@
-0.0.1 - MVP release
-0.0.2 - added method for changing check_days. 
-
-TODO - add critical error and low cycles (manager reserves) warning.
