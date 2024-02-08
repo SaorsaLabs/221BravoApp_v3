@@ -37,3 +37,5 @@ dfx canister call super_indexer_v3 --network ic start_processing_timer '(60: nat
 ``` 
 
 The index canister will then work through the history of the ledger in batches of 10,000 transactions and then continue to pull new transactions as available. 
+
+You can check the canister logs to get an idea of the progress of the data-fetching with this argument `dfx canister call super_indexer_v3 –network ic get_all_logs`
