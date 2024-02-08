@@ -1,0 +1,131 @@
+// Oracle CPC v0.0.1
+// NOTE - Remember init args 
+
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+
+type LogEntry = record {timestamp: text; text: text};
+
+type Marketplace = variant {
+    ICDEX : null;
+    ICPSWAP : null;
+    SONIC : null;
+};
+
+type SwapPair = variant {
+    CKBTC_ICP: null;
+    CHAT_ICP: null;
+    OGY_ICP: null;
+    SNEED_ICP: null;
+    SNS1_ICP: null;
+    SONIC_ICP: null;
+    MOD_ICP: null;
+    BOOM_ICP: null;
+    GHOST_ICP: null;
+    HOT_ICP: null;
+    CAT_ICP: null;
+    KINIC_ICP: null;
+    NUA_ICP: null;
+    ICX_ICP: null;
+    TAL_ICP: null;
+    CKETH_ICP: null;
+    TRAX_ICP: null;
+    GLDGOV_ICP: null;
+    NTN_ICP: null;
+    EXE_ICP: null;
+    QUERIO_ICP: null;
+    MOTOKO_ICP: null;
+};
+
+type TokenStandard = variant {
+    ICRC1: null;
+    ICRC2: null;
+};
+
+type Token = record {
+    ticker: text;
+    ledger: text;
+    decimals: nat32;
+    standard: TokenStandard;
+};
+
+type MarketplaceDetails = record {
+    marketplace: Marketplace;
+    canister_id: text;
+    active: bool;
+    reverse_cross: bool;
+    unit_size: nat64; 
+};
+
+type SwapPairDetails = record {
+    swap_id: SwapPair;
+    token0: Token;
+    token1: Token;
+    marketplaces: vec MarketplaceDetails;
+    last_quote: nat64;
+    active: bool;
+};
+
+type ExchangeSnapshot = record {
+    snapshot_time: nat64;
+    swap_pair: SwapPair;
+    exchange: Marketplace;
+    price: float64;
+    bid: nat;
+    ask: nat;
+    spread_pct: float64;
+    liquidity: record { nat64; nat64 };
+};
+
+type MibRecord = record { text; text};
+
+type OverviewV1 = record {
+    token_cross: text;
+    snapshot_time: nat64;
+    average_price: float64;
+    exchange_snapshots: vec ExchangeSnapshot;
+    cross_to_usd: float64;
+};
+
+type QuoteCurrency = variant {
+    ICP: null;
+    USD: null;
+    XDR: null;
+};
+
+type Metrics = record {
+    total_snapshots_taken: nat64;
+    total_http_outcalls: nat64;
+    total_errors: nat64;
+    total_api_requests_v1: nat64;
+};
+
+service : (text) -> {
+    // Canister Management
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "canister_version": () -> (text) query;
+
+    // CPC *ADMIN GATED
+    "add_mib_canister": (text, text) -> (text); // canister, name
+    "remove_mib_canister": (text) -> (text);
+    "get_all_mib_canisters": () -> (vec MibRecord) query;
+    "set_mib_marketplace": (text, Marketplace) -> (text);
+    "add_pair_to_mib_canister": (text, SwapPair) -> (text);
+    "remove_pair_from_mib_canister": (text, SwapPair) -> (text);
+    "get_all_swap_pairs": () -> (vec text) query;
+    "get_metrics": () -> (Metrics) query;
+    
+    // CPC *AUTHORISED GATE
+    "get_quote_v1": (text, QuoteCurrency) -> (opt OverviewV1); // cross as text
+    "get_all_quotes_v1": (QuoteCurrency) -> (vec OverviewV1);
+    "get_last_update_time": () -> (nat64, nat64) query;
+
+    // Timers 
+    "stop_all_timers": () -> (text);
+    "start_quotes_timer": (nat64, nat64) -> (text); // main quotes timer, stable quotes timer
+}

@@ -1,0 +1,16 @@
+[package]
+name = "defi_oracle_shared"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "src/lib.rs"
+crate-type = ["lib"]
+
+[dependencies]
+candid = "0.10.1"
+serde = "1.0.159"
+ic-cdk = "0.12.0"
+num-traits = "0.2.17"
+num-bigint = "0.4.4"

@@ -1,0 +1,98 @@
+
+// Oracle MIB v0.0.1
+// NOTE - Remember init args 
+
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+
+type LogEntry = record {timestamp: text; text: text};
+
+type Marketplace = variant {
+    ICDEX : null;
+    ICPSWAP : null;
+    SONIC : null;
+};
+
+type SwapPair = variant {
+    CKBTC_ICP: null;
+    CHAT_ICP: null;
+    OGY_ICP: null;
+    SNEED_ICP: null;
+    SNS1_ICP: null;
+    SONIC_ICP: null;
+    MOD_ICP: null;
+    BOOM_ICP: null;
+    GHOST_ICP: null;
+    HOT_ICP: null;
+    CAT_ICP: null;
+    KINIC_ICP: null;
+    NUA_ICP: null;
+    ICX_ICP: null;
+    TAL_ICP: null;
+    CKETH_ICP: null;
+    TRAX_ICP: null;
+    GLDGOV_ICP: null;
+    NTN_ICP: null;
+    EXE_ICP: null;
+    QUERIO_ICP: null;
+    MOTOKO_ICP: null;
+};
+
+type TokenStandard = variant {
+    ICRC1: null;
+    ICRC2: null;
+};
+
+type Token = record {
+    ticker: text;
+    ledger: text;
+    decimals: nat32;
+    standard: TokenStandard;
+};
+
+type MarketplaceDetails = record {
+    marketplace: Marketplace;
+    canister_id: text;
+    active: bool;
+    reverse_cross: bool;
+    unit_size: nat64; 
+};
+
+type SwapPairDetails = record {
+    swap_id: SwapPair;
+    token0: Token;
+    token1: Token;
+    marketplaces: vec MarketplaceDetails;
+    last_quote: nat64;
+    active: bool;
+};
+
+type ExchangeSnapshot = record {
+    snapshot_time: nat64;
+    swap_pair: SwapPair;
+    exchange: Marketplace;
+    price: float64;
+    bid: nat;
+    ask: nat;
+    spread_pct: float64;
+    liquidity: record { nat64; nat64 };
+}
+
+service : (text) -> {
+    // Canister Management
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "canister_version": () -> (text) query;
+
+    // APP
+    "get_assigned_marketplace": () -> (text) query;
+    "set_assigned_marketplace": (Marketplace) -> (text);
+    "add_token_cross": (SwapPairDetails) -> (text);
+    "remove_token_cross": (SwapPair) -> (text);
+    "get_all_token_crosses": () -> (vec text) query;
+    "test_call": () -> (opt vec ExchangeSnapshot);
+}
