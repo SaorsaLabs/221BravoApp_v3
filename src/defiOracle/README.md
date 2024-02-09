@@ -25,7 +25,28 @@ dfx canister call vq2tb-uiaaa-aaaak-qcqfa-cai --network get_all_quotes_v1 '(vari
 ```
 
 ## Getting Historic Quotes
+Users wishing to get more than the current quote can query the OHLC Store to get historic data including the currently forming bar. There are a number of methods you can use depending on what data you are needing. Historic Prices are given in ICP
+You can get the available token crosses by querying ‘get_all_crosses’ 
 
+```bash
+dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic  get_all_crosses
+```
 
-## Setup/ Token Management
-Setup
+For all price data for a certain token cross (example below is for CHAT/ICP)
+
+```bash
+dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic get_all_data '("CHAT/ICP")' 
+```
+
+You can get specific timeframes by calling one of the following methods 
+* get_m5_data
+* get_m15_data
+* get_h1_data
+* get_d1_data
+* get_w1_data
+
+Each of these methods takes two arguments. The first being the token cross as text and the second the maximum number of bars to fetch.
+
+```bash
+dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic get_m5_data '("CHAT/ICP", 50 :nat64)' 
+```
