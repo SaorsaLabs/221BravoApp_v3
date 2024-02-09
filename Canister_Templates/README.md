@@ -22,9 +22,13 @@ Authorised users can be used to provide access to gated (non-admin) functions wh
 You can give everyone access to an authorised/ admin method by adding the anonymous principal (2vxsx-fae) to the list of admin/ authorised users. This can be useful if you want to only give access at certain times. 
 
 To gate a custom function you have crated – simple add
-`RUNTIME_STATE.with(|s| {
+
+```rust
+RUNTIME_STATE.with(|s| {
         s.borrow().data.check_admin(ic_cdk::caller().to_text());
-    });`
+    });
+```
+
 At the start of the function associated with the method you want to gate.  Replace check_admin with check_authorised in the above script if you are gating for authorised level users.
 
 For more examples, browse the v3 canisters in the main 221BravoApp_v3 repository.
