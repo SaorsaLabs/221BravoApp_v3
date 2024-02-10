@@ -31,7 +31,7 @@ RUNTIME_STATE.with(|s| {
 
 At the start of the function associated with the method you want to gate.  Replace check_admin with check_authorised in the above script if you are gating for authorised level users.
 
-For more examples, browse the v3 canisters in the main 221BravoApp_v3 repository.
+A simple example of the modular canister can be found [here](https://github.com/SaorsaLabs/Template_Canister)
 
 ## Note
 Any timers set in the template canisters are NOT persisted through upgrades. When deploying an upgrade to the canister it is recommended to stop any timers, deploy the upgrade and then start the timer once again.  
