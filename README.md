@@ -1,6 +1,8 @@
 # 221BravoApp V3
 Home for Data-Detectives in the Internet Computer Ecosystem.
 
+## NOTE - We're still building here :)
+
 221Bravo is a blockchain explorer primarily focused on the Internet Computer Ecosystem giving users the ability to navigate complex data in a simple and understandable way. 
 The app is broken down into several sections:
 
