@@ -1,5 +1,7 @@
 # Canister Templates - Guide
 
+NOTE - We've added a template canister example [here](https://github.com/SaorsaLabs/Template_Canister)
+
 Modular_IC_Stable_Memory and Modular_IC_Stable_Structures are two templates used by 221Bravo App when building canister smart contracts. 
 
 These templates have been built to be modular to make it easier to add features such as HTTPS Outcalls, timers or your own custom functions. Each template can use stable storage – either using the IC Stable Memory crate (https://docs.rs/ic-stable-memory/latest/ic_stable_memory/mem/index.html) or using IC Stable Structures (https://docs.rs/ic-stable-structures/latest/ic_stable_structures/)
