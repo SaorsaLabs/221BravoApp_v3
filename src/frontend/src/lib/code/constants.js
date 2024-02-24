@@ -1,0 +1,10 @@
+export const DEFAULT_SUBACCOUNT = '0000000000000000000000000000000000000000000000000000000000000000';
+export const MAX_BLOCK_SEARCH = 10000;
+export const MAX_TIME_LOGIN = 60 * 60 * 24 * 3; // 3 days in seconds
+export const MAX_TIME_COOKIE = 60 * 60 * 24 * 180; // 180 days in seconds
+export const backendCanisterID = "kzaoz-oaaaa-aaaak-qcz6a-cai";
+export const priceOracleCanisterID = "vq2tb-uiaaa-aaaak-qcqfa-cai";
+export const priceStoreCanisterID = "lo4kk-kyaaa-aaaak-qcska-cai";
+export const genesisNFTCanister = "t555s-uyaaa-aaaal-qbjsa-cai";
+export const icpLedgerCanister = "ryjl3-tyaaa-aaaaa-aaaba-cai";
+export const icpStatsCanister = "nnblz-xiaaa-aaaak-qcznq-cai";
