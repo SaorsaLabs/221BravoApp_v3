@@ -1,0 +1,53 @@
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+
+type LogEntry = record {timestamp: text; text: text};
+
+type PriceTuple = record {
+    cross_price: float64;
+    usd_price: float64;
+};
+
+type OHLC = record {
+    open_time: nat64;
+    close_time: nat64;
+    open: PriceTuple;
+    high: PriceTuple;
+    low:  PriceTuple;
+    close:PriceTuple;
+    volume: nat64;
+};
+
+type PriceChangeData = record {
+    cross: text; 
+    latest_price: float64;
+    change_24: float64;
+    change_7d: float64;
+    sparkline: vec float64    
+};
+
+service : (text) -> {
+    // Canister Management
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "get_canister_version": () -> (text) query;
+
+    // OHLC Store
+    "add_cross": (text) -> (opt nat64);  // starts from next midnight!
+    "remove_cross": (text) -> (text);
+    "get_all_crosses": () -> (vec text);
+    "get_m5_data": (text, nat64) -> (opt vec OHLC) query;
+    "get_m15_data": (text, nat64) -> (opt vec OHLC) query;
+    "get_h1_data": (text, nat64) -> (opt vec OHLC) query;
+    "get_d1_data": (text, nat64) -> (opt vec OHLC) query;
+    "get_w1_data": (text, nat64) -> (opt vec OHLC) query;
+    "get_all_change_data": () -> (vec PriceChangeData);
+
+    // Timers 
+    "stop_all_timers": () -> (text);
+    "start_quotes_timer": (nat64, text) -> (text); // secs, oracle canister 
+}

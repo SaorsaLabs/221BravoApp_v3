@@ -1,5 +1,5 @@
 use candid::CandidType;
-use ic_stable_memory::{derive::StableType, AsFixedSizeBytes};
+use ic_stable_memory::{derive::{AsFixedSizeBytes, StableType}, AsFixedSizeBytes};
 use serde::{Serialize, Deserialize};
 
 // [][] --- Types for Utils --- [][]
@@ -70,4 +70,3 @@ impl IDKey {
         }
     }
 }
-
