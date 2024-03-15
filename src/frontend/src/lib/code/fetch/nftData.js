@@ -1,8 +1,6 @@
 import { parsePrincipalSubAccountString } from '../utils.js';
 import { DEFAULT_SUBACCOUNT } from '../constants.js';
 
-// https://api.nftgeek.app/api/
-
 export async function getNFTcount(searchInput){
     if (searchInput == "" || searchInput == null || searchInput == undefined) return 0;
     if (searchInput.includes(".") && searchInput.includes("-")){

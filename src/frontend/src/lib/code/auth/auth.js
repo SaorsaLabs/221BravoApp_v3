@@ -6,6 +6,7 @@ import { backendCanisterIDL } from '../IDL/backend.js';
 import { genesisNftIDL } from '../IDL/genesisNFT.js';
 import { getIdentity, icActor } from '../fetch/icAgent.js';
 import { goto } from '$app/navigation';
+import { getUserData } from '../fetch/userData.js';
 
 // STOIC LOGIN
 async function stoicLogin() {
@@ -21,7 +22,12 @@ async function stoicLogin() {
 				let d = new Date();
 				let time = d.getTime() / 1000; // current in secs.
 				let EA = await encryptID(isHolder.account);
-				authStore.set(true, EA, time, "");
+				let userData = await getUserData(EA);
+				let oc_id = "abc123";
+				if (userData[0]?.user_oc_principal?.length > 0) {
+					oc_id = userData[0].user_oc_principal[0];
+				}
+				authStore.set(true, EA, time, "", oc_id);
 				StoicIdentity.disconnect();
 				goto("/members/home");
 				return true;
@@ -47,7 +53,12 @@ async function plugLogin() {
 					let d = new Date();
 					let time = d.getTime() / 1000; // current in secs.
 					let EA = await encryptID(isHolder.account);
-					authStore.set(true, EA, time, "");
+					let userData = await getUserData(EA);
+					let oc_id = "abc123";
+					if (userData?.user_oc_principal?.length > 0) {
+						oc_id = userData.user_oc_principal[0];
+					}
+					authStore.set(true, EA, time, "", oc_id);
 					goto("/members/home");
 					return true;
 				} else {
@@ -78,7 +89,12 @@ async function bitfinityLogin() {
 					let d = new Date();
 					let time = d.getTime() / 1000; // current in secs.
 					let EA = await encryptID(isHolder.account);
-					authStore.set(true, EA, time, "");
+					let userData = await getUserData(EA);
+					let oc_id = "abc123";
+					if (userData?.user_oc_principal?.length > 0) {
+						oc_id = userData.user_oc_principal[0];
+					}
+					authStore.set(true, EA, time, "", oc_id);
 					goto("/members/home");
 					return true;
 				} else {

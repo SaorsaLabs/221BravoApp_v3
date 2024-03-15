@@ -1,0 +1,58 @@
+ {
+      "id": 14,
+      "ticker": "TAL",
+      "snapshotTicker": "TAL",
+      "fullName": "Taler Token",
+      "shortName": "Taler",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "chartDecimals": 4,
+      "txFee": 1000000,
+      "tokenLedger": "gnc5v-fyaaa-aaaar-qab2q-cai",
+      "stats221B": "nxf7g-2yaaa-aaaak-qcn3q-cai", 
+      "index221B": "m2l3i-vqaaa-aaaak-qcn4a-cai",
+      "tradePair": "TAL/ICP",
+      "tradeURL": "https://iclight.io/ICDex/TAL/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/elliptic_dao"},
+        {"platform": "openchat", "url": "https://oc.app/group/xtned-fqaaa-aaaar-atffa-cai/?ref=kkjx3-jyaaa-aaaar-atuia-cai&code=25dd9fe9c8bb6e35"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://bvy5a-6yaaa-aaaam-abt3q-cai.icp0.io/"},
+        {"type": "whitepaper", "url": "https://elliptic-1.gitbook.io/elliptic-docs/"},
+        {"type": "github", "url": "https://github.com/Elliptic-DAO"}
+      ],
+      "marketplaces": []
+    },
+
+
+    // QUERIO - vi5vh-wyaaa-aaaan-qizxa-cai (Ledger)
+
+
+    // CLOWN - 
+     ,
+    {
+      "id": 21,
+      "ticker": "CLOWN",
+      "snapshotTicker": "CLOWN",
+      "fullName": "Clown Token",
+      "shortName": "Clown",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "chartDecimals": 4,
+      "txFee": 50000000,
+      "tokenLedger": "fssrl-zyaaa-aaaak-afkia-cai",
+      "stats221B": "h2pc7-wiaaa-aaaak-qc7ia-cai", 
+      "index221B": "fhsmx-faaaa-aaaak-qc7hq-cai",
+      "tradePair": "CLOWN/ICP",
+      "tradeURL": "https://app.icpswap.com/",
+      "quoteCurrency": "ICP",
+      "socials": [
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://clownicp.com/"}
+      ],
+      "marketplaces": [
+      ]
+    }

@@ -38,6 +38,7 @@ export const backendCanisterIDL = ({ IDL }) => {
     'user_name' : IDL.Text,
     'user_account' : IDL.Text,
     'user_tokens' : IDL.Nat32,
+    'user_oc_principal' : IDL.Opt(IDL.Text),
   });
   return IDL.Service({
     'add_authorised' : IDL.Func([IDL.Text], [IDL.Text], []),
@@ -103,6 +104,7 @@ export const backendCanisterIDL = ({ IDL }) => {
         [IDL.Text],
         [],
       ),
+    'set_user_oc_id' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
     'start_quotes_timer' : IDL.Func(
         [IDL.Nat64, IDL.Nat64, IDL.Nat64],
         [IDL.Text],

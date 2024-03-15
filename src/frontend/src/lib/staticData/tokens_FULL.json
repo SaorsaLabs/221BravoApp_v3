@@ -1,0 +1,504 @@
+[
+    {
+      "id": 1,
+      "ticker": "ICP",
+      "snapshotTicker": "ICP",
+      "fullName": "Internet Computer Protocol",
+      "shortName": "ICP",
+      "standard": "icp-og",
+      "decimals": 8,
+      "txFee": 10000,
+      "tokenLedger": "ryjl3-tyaaa-aaaaa-aaaba-cai",
+      "stats221B": "ltzyb-kqaaa-aaaak-qcg4q-cai",
+      "index221B": "mx6pc-wyaaa-aaaak-qckaa-cai",
+      "tradePair": "ICP/USD",
+      "tradeURL": "",
+      "quoteCurrency": "USD",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/dfinity"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://dfinity.org/"},
+        {"type": "whitepaper", "url": "https://internetcomputer.org/whitepaper.pdf"},
+        {"type": "github", "url": "https://github.com/dfinity"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/"}
+      ],
+      "marketplaces": []
+    },
+    {
+      "id": 2,
+      "ticker": "CKBTC",
+      "snapshotTicker": "CKBTC",
+      "fullName": "Chain Key Bitcoin",
+      "shortName": "ckBTC",
+      "standard": "icrc-2",
+      "decimals": 8,
+      "txFee": 10,
+      "tokenLedger": "mxzaz-hqaaa-aaaar-qaada-cai",
+      "stats221B": "26yxo-4iaaa-aaaak-qcfwa-cai",
+      "index221B": "4lv6s-yiaaa-aaaak-qcjpa-cai",
+      "tradePair": "CKBTC/ICP",
+      "tradeURL": "https://iclight.io/ICDex/ckBTC/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/dfinity"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/ckbtc"},
+        {"platform": "openchat", "url": "https://oc.app/group/zcm6o-qqaaa-aaaar-af4wa-cai"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://dfinity.org/"},
+        {"type": "whitepaper", "url": "https://medium.com/dfinity/chain-key-bitcoin-a-decentralized-bitcoin-twin-ceb8f4ddf95e"},
+        {"type": "github", "url": "https://github.com/dfinity/ic/tree/d2b3c3ee60b87b8d456f91ffb234f09b799770de/rs/bitcoin/ckbtc"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/bitcoin"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/ckBTC/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 3,
+      "ticker": "SNS1",
+      "snapshotTicker": "SNS1",
+      "fullName": "Dragginz Token",
+      "shortName": "Dragginz",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 1000,
+      "tokenLedger": "zfcdd-tqaaa-aaaaq-aaaga-cai",
+      "stats221B": "ulslc-eqaaa-aaaak-qcizq-cai", 
+      "index221B": "lk4b6-zyaaa-aaaak-qcksa-cai",
+      "tradePair": "SNS1/ICP",
+      "tradeURL": "https://iclight.io/ICDex/SNS1/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/SNS1dao"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/dragginz"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://yegk3-bqaaa-aaaae-aajza-cai.icp0.io/"},
+        {"type": "whitepaper", "url": "https://yegk3-bqaaa-aaaae-aajza-cai.icp0.io/#plan"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/zxeu2-7aaaa-aaaaq-aaafa-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/SNS1/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 4,
+      "ticker": "CHAT",
+      "snapshotTicker": "CHAT",
+      "fullName": "Open Chat Token",
+      "shortName": "Chat",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "2ouva-viaaa-aaaaq-aaamq-cai",
+      "stats221B": "umtnw-jiaaa-aaaak-qciza-cai", 
+      "index221B": "ly2wh-viaaa-aaaak-qckra-cai",
+      "tradePair": "CHAT/ICP",
+      "tradeURL": "https://iclight.io/ICDex/CHAT/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/OpenChat"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/openchat"},
+        {"platform": "openchat", "url": "https://oc.app/community/dgegb-daaaa-aaaar-arlhq-cai"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://oc.app/features"},
+        {"type": "whitepaper", "url": "https://oc.app/whitepaper"},
+        {"type": "github", "url": "https://github.com/open-chat-labs/open-chat"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/3e3x2-xyaaa-aaaaq-aaalq-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/CHAT/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 5,
+      "ticker": "KINIC",
+      "snapshotTicker": "KINIC",
+      "fullName": "Kinic Token",
+      "shortName": "Kinic",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "73mez-iiaaa-aaaaq-aaasq-cai",
+      "stats221B": "u6v2p-fyaaa-aaaak-qci2a-cai", 
+      "index221B": "le6mw-ciaaa-aaaak-qckta-cai",
+      "tradePair": "KINIC/ICP",
+      "tradeURL": "https://iclight.io/ICDex/KINIC/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/kinic_app"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/kinicdao"},
+        {"platform": "openchat", "url": "https://oc.app/group/tz3gc-eyaaa-aaaaf-ahgeq-cai"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://kinic.io"},
+        {"type": "whitepaper", "url": "https://74iy7-xqaaa-aaaaf-qagra-cai.raw.ic0.app/whitepaper"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/7jkta-eyaaa-aaaaq-aaarq-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/KINIC/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 6,
+      "ticker": "HOT",
+      "snapshotTicker": "HOT",
+      "fullName": "Hot or Not Token",
+      "shortName": "Hot",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "6rdgd-kyaaa-aaaaq-aaavq-cai",
+      "stats221B": "uzu43-iaaaa-aaaak-qci2q-cai", 
+      "index221B": "korom-ayaaa-aaaak-qckua-cai",
+      "tradePair": "HOT/ICP",
+      "tradeURL": "https://iclight.io/ICDex/HOT/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/hotornot_dapp"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/hot-or-not"},
+        {"platform": "openchat", "url": "https://oc.app/group/qpj6u-uyaaa-aaaar-aq6mq-cai"},
+        {"platform": "distrikt", "url": "https://distrikt.app/u/GoBazzinga"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://hotornot.wtf/"},
+        {"type": "whitepaper", "url": "https://hotornot.notion.site/Hot-or-Not-Whitepaper-c539179e51f44867979f4372e4635f59"},
+        {"type": "github", "url": "https://github.com/go-bazzinga/hot-or-not-dapp"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/67bll-riaaa-aaaaq-aaauq-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/HOT/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 7,
+      "ticker": "GHOST",
+      "snapshotTicker": "GHOST",
+      "fullName": "Ghost Token",
+      "shortName": "Ghost",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000000,
+      "tokenLedger": "4c4fd-caaaa-aaaaq-aaa3a-cai",
+      "stats221B": "v2yv5-4yaaa-aaaak-qci4a-cai", 
+      "index221B": "katde-3iaaa-aaaak-qckva-cai",
+      "tradePair": "GHOST/ICP",
+      "tradeURL": "https://iclight.io/ICDex/GHOST/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/ghost_icp"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/ghost"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://www.icghost.org/"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/4m6il-zqaaa-aaaaq-aaa2a-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/GHOST/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 8,
+      "ticker": "MOD",
+      "snapshotTicker": "Modclub",
+      "fullName": "Mod Club Token",
+      "shortName": "ModClub",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 10000,
+      "tokenLedger": "xsi2v-cyaaa-aaaaq-aabfq-cai",
+      "stats221B": "cssbn-laaaa-aaaak-qclaq-cai", 
+      "index221B": "c4qmf-qqaaa-aaaak-qclbq-cai",
+      "tradePair": "MOD/ICP",
+      "tradeURL": "https://iclight.io/ICDex/MOD/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/ModclubApp"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/modclub"},
+        {"platform": "distrikt", "url": "https://distrikt.app/u/MODCLUB_Official"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://modclub.ai/"},
+        {"type": "whitepaper", "url": "https://docsend.com/view/kuxk6x5pghemyrje"},
+        {"type": "github", "url": "https://github.com/modclub-app"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/w7g63-nqaaa-aaaaq-aabca-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/MOD/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 9,
+      "ticker": "CAT",
+      "snapshotTicker": "CAT",
+      "fullName": "Catalyze Token",
+      "shortName": "Catalyze",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "uf2wh-taaaa-aaaaq-aabna-cai",
+      "stats221B": "fuvtu-6yaaa-aaaak-qclqa-cai", 
+      "index221B": "f2x64-fiaaa-aaaak-qclra-cai",
+      "tradePair": "CAT/ICP",
+      "tradeURL": "https://iclight.io/ICDex/CAT/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/catalyze_one"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/catalyze"},
+        {"platform": "distrikt", "url": "https://distrikt.app/u/Catalyze"},
+        {"platform": "catalyze", "url": "https://catalyze.one/"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://catalyze.one/"},
+        {"type": "whitepaper", "url": "https://catalyze.one/whitepaper/"},
+        {"type": "github", "url": "https://github.com/Catalyze-Software"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/uly3p-iqaaa-aaaaq-aabma-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/CAT/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 10,
+      "ticker": "BOOM",
+      "snapshotTicker": "BOOM",
+      "fullName": "BoomDAO Token",
+      "shortName": "BoomDAO",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "vtrom-gqaaa-aaaaq-aabia-cai",
+      "stats221B": "gycdd-vyaaa-aaaak-qcl2a-cai", 
+      "index221B": "g7dfx-yaaaa-aaaak-qcl2q-cai",
+      "tradePair": "BOOM/ICP",
+      "tradeURL": "https://iclight.io/ICDex/BOOM/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/boomdaosns"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/boomdaosns"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://u52bf-3qaaa-aaaal-qb5wq-cai.icp0.io/"},
+        {"type": "whitepaper", "url": "https://u52bf-3qaaa-aaaal-qb5wq-cai.icp0.io/"},
+        {"type": "github", "url": "https://github.com/BoomDAO"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/xjngq-yaaaa-aaaaq-aabha-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/BOOM/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 11,
+      "ticker": "ICX",
+      "snapshotTicker": "ICX",
+      "fullName": "ICX Token",
+      "shortName": "ICX",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "rffwt-piaaa-aaaaq-aabqq-cai",
+      "stats221B": "grbi7-dqaaa-aaaak-qcl3q-cai", 
+      "index221B": "h3okf-baaaa-aaaak-qcl4q-cai",
+      "tradePair": "ICX/ICP",
+      "tradeURL": "https://iclight.io/ICDex/ICX/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/boomdaosns"},
+        {"platform": "openchat", "url": "https://oc.app/community/z6b5f-6iaaa-aaaar-asvvq-cai/?ref=xp567-tqaaa-aaaar-as7hq-cai"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://icx.one/"},
+        {"type": "github", "url": "https://github.com/SeersSocial"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/xjngq-yaaaa-aaaaq-aabha-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/ICX/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 12,
+      "ticker": "NUA",
+      "snapshotTicker": "NUANCE",
+      "fullName": "Nuance Token",
+      "shortName": "Nuance",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "rxdbk-dyaaa-aaaaq-aabtq-cai",
+      "stats221B": "burde-oqaaa-aaaak-qcmwa-cai", 
+      "index221B": "btqfq-diaaa-aaaak-qcmwq-cai",
+      "tradePair": "NUA/ICP",
+      "tradeURL": "https://iclight.io/ICDex/NUA/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/nuancedapp"},
+        {"platform": "dscvr", "url": "https://dscvr.one/p/nuance"},
+        {"platform": "distrikt", "url": "https://distrikt.app/u/Nuance_Official"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://nuance.xyz/"},
+        {"type": "whitepaper", "url": "https://nuance.xyz/publication/nuance/white-paper"},
+        {"type": "github", "url": "https://github.com/Aikindapps/Nuance/"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/rzbmc-yiaaa-aaaaq-aabsq-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/NUA/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 12,
+      "ticker": "SONIC",
+      "snapshotTicker": "SONIC",
+      "fullName": "Sonic Token",
+      "shortName": "Sonic",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "qbizb-wiaaa-aaaaq-aabwq-cai",
+      "stats221B": "p77ad-iyaaa-aaaak-qcnxq-cai", 
+      "index221B": "nccol-3qaaa-aaaak-qcnya-cai",
+      "tradePair": "SONIC/ICP",
+      "tradeURL": "https://iclight.io/ICDex/SONIC/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/sonic_ooo"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://sonic.ooo/"},
+        {"type": "whitepaper", "url": "https://sonicdex.gitbook.io/sonic-whitepaper/"},
+        {"type": "github", "url": "https://github.com/sonicdex"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/sns/qtooy-2yaaa-aaaaq-aabvq-cai"}
+      ],
+      "marketplaces": [
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/SONIC/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"},
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"}
+      ]
+    },
+    {
+      "id": 13,
+      "ticker": "TAL",
+      "snapshotTicker": "TAL",
+      "fullName": "Taler Token",
+      "shortName": "Taler",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 1000000,
+      "tokenLedger": "gnc5v-fyaaa-aaaar-qab2q-cai",
+      "stats221B": "nxf7g-2yaaa-aaaak-qcn3q-cai", 
+      "index221B": "m2l3i-vqaaa-aaaak-qcn4a-cai",
+      "tradePair": "TAL/ICP",
+      "tradeURL": "https://iclight.io/ICDex/TAL/ICP",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/elliptic_dao"},
+        {"platform": "openchat", "url": "https://oc.app/group/xtned-fqaaa-aaaar-atffa-cai/?ref=kkjx3-jyaaa-aaaar-atuia-cai&code=25dd9fe9c8bb6e35"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://bvy5a-6yaaa-aaaam-abt3q-cai.icp0.io/"},
+        {"type": "whitepaper", "url": "https://elliptic-1.gitbook.io/elliptic-docs/"},
+        {"type": "github", "url": "https://github.com/Elliptic-DAO"}
+      ],
+      "marketplaces": []
+    },
+    {
+      "id": 14,
+      "ticker": "CKETH",
+      "snapshotTicker": "CKETH",
+      "fullName": "Chain Key Ethereum",
+      "shortName": "ckETH",
+      "standard": "icrc-2",
+      "decimals": 18,
+      "txFee": 2000000000000,
+      "tokenLedger": "ss2fx-dyaaa-aaaar-qacoq-cai",
+      "stats221B": "iu3ss-yiaaa-aaaak-qcv6q-cai",
+      "index221B": "ig5fl-uyaaa-aaaak-qcv5q-cai",
+      "tradePair": "CKETH/ICP",
+      "tradeURL": "",
+      "quoteCurrency": "ICP",
+      "socials": [
+        {"platform": "twitter", "url": "https://twitter.com/dfinity"}
+      ],
+      "links": [
+        {"type": "teamWebsite", "url": "https://dfinity.org/"},
+        {"type": "whitepaper", "url": "https://forum.dfinity.org/t/cketh-a-canister-issued-ether-twin-token-on-the-ic/22819"},
+        {"type": "github", "url": "https://github.com/dfinity/ic/tree/67c71ab8a77e62ddc51ce1afb479bc9bae87640d/rs/ethereum/cketh"},
+        {"type": "snsDashboard", "url": "https://dashboard.internetcomputer.org/"}
+      ],
+      "marketplaces": [
+        {"platform": "Sonic", "url": "https://app.sonic.ooo/swap"},
+        {"platform": "IcLight", "url": "https://iclight.io/ICDex/ckETH/ICP"},
+        {"platform": "IcpSwap", "url": "https://app.icpswap.com/swap"}
+      ]
+    },
+    {
+      "id": 15,
+      "ticker": "NTN",
+      "snapshotTicker": "NTN",
+      "fullName": "Neutrinite Token",
+      "shortName": "Neutrinite",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 10000,
+      "tokenLedger": "f54if-eqaaa-aaaaq-aacea-cai",
+      "stats221B": "mvi62-ziaaa-aaaak-qczjq-cai", 
+      "index221B": "mappx-yaaaa-aaaak-qczka-cai",
+      "tradePair": "NTN/ICP",
+      "tradeURL": "",
+      "quoteCurrency": "ICP",
+      "socials": [
+      ],
+      "links": [
+      ],
+      "marketplaces": [
+      ]
+    },
+    {
+      "id": 16,
+      "ticker": "GLDGOV",
+      "snapshotTicker": "GLDGOV",
+      "fullName": "Gold DAO Token",
+      "shortName": "Gold DAO",
+      "standard": "icrc-1",
+      "decimals": 8,
+      "txFee": 100000,
+      "tokenLedger": "tyyy3-4aaaa-aaaaq-aab7a-cai",
+      "stats221B": "mjmel-oiaaa-aaaak-qczlq-ca", 
+      "index221B": "necaf-baaaa-aaaak-qczma-cai",
+      "tradePair": "GLDGOV/ICP",
+      "tradeURL": "",
+      "quoteCurrency": "ICP",
+      "socials": [
+      ],
+      "links": [
+      ],
+      "marketplaces": [
+      ]
+    }
+    
+]
+  

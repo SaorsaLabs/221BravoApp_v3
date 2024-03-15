@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="%sveltekit.assets%/221B.ico" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="description" content="Multi Token Blockchain Explorer built on the Internet Computer" />
+		<meta name="keywords" content="ICP, Internet Computer, ICP Blockchain, Blockchain Explorer, ckBTC" />
+		%sveltekit.head%
+	</head>
+	
+	<body data-sveltekit-preload-data="hover" data-theme="bravoTheme">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
+</html>
+
+<style>
+	/* html, body { @apply h-full; } */
+body {
+	background-image:
+		radial-gradient(at 0% 0%, rgba(var(--color-secondary-500) / 0.33) 0px, transparent 50%),
+		radial-gradient(at 98% 1%, rgba(var(--color-primary-500) / 0.33) 0px, transparent 50%);
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+</style>

@@ -1,7 +1,8 @@
 import { getIdentity, icActor } from "./icAgent";
 import { priceOracleIDL } from "../IDL/priceOracle";
-import { priceOracleCanisterID, priceStoreCanisterID } from '../constants.js';
-import { priceStoreIDL } from '../IDL/priceStore.js';
+import { priceStoreMk2IDL } from "../IDL/priceStoreMk2.js";
+import { priceOracleCanisterID, priceStoreMk2CanisterID } from '../constants.js';
+
 
 export async function getAllQuotes(mode){
     const Frontend_ID = getIdentity();
@@ -32,7 +33,6 @@ export async function getTokenQuote(token, mode, decimals){
     }
 
     let cross = `${token}/ICP`;
-    console.log("cross ", cross);
     let actor = icActor(priceOracleCanisterID, priceOracleIDL, Frontend_ID);
     let res; 
     try {
@@ -43,7 +43,7 @@ export async function getTokenQuote(token, mode, decimals){
     }
 
     // process results
-    let avPrice = res[0]?.average_price ?? 0.0;
+    // let avPrice = res[0]?.average_price ?? 0.0; not required
     let mpLen = res[0]?.exchange_snapshots?.length ?? 0;
     let mpOP = [];
     let mp;
@@ -64,7 +64,7 @@ export async function getTokenQuote(token, mode, decimals){
 export async function getOHLCdata(token, timeframe){
     if (!token || !timeframe) return [];
     const Frontend_ID = getIdentity();
-    let actor = icActor(priceStoreCanisterID, priceStoreIDL, Frontend_ID);
+    let actor = icActor(priceStoreMk2CanisterID, priceStoreMk2IDL, Frontend_ID);
     let res;
     let tkn = `${token}/ICP`; 
     try {

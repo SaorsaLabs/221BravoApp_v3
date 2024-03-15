@@ -72,5 +72,4 @@ export async function addNamedAccounts(blockData){
     }
     // return
     return blockData;
-
 }
