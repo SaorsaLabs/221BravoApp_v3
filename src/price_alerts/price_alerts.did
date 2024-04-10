@@ -1,0 +1,34 @@
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+type LogEntry = record {timestamp: text; text: text};
+type AlertData = record {
+    id: nat64;
+    user: text;
+    cross: text;
+    oc_id: text;
+    price: float64;
+    direction: nat8 
+};
+
+service : (text) -> {
+    // Canister Management
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "get_canister_version": () -> (text) query;
+
+    // Price Alerts
+    "add_price_alert": (AlertData) -> (int64);
+    "remove_price_alert": (AlertData) -> (text);
+    "get_all_user_alerts": (text) ->  (opt vec AlertData) query;
+    "get_all_cross_alerts": (text) -> (opt vec AlertData) query;
+    "update_oracle_id": (text) -> (text);
+    "get_total_alerts_sent": () -> (nat64) query;
+
+    // Timers 
+    "stop_all_timers": () -> (text);
+    "start_alert_timer": (nat64) -> (text); // secs
+}

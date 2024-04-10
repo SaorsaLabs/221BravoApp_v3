@@ -1,0 +1,25 @@
+[package]
+name = "price_alerts"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+ic-cdk = "0.12.0"
+ic-cdk-macros = "0.8.1"
+candid = "0.10.1"
+serde = "1.0.192"
+ic-cdk-timers = "0.6.0"
+ciborium = "0.2.1"
+ic-stable-memory = "0.4.4"
+oracle_shared_mk2 = { path = "../defiOracle_mk2/oracle_shared_mk2"}
+# for futures
+futures = "0.3.28"
+
+
+
+
