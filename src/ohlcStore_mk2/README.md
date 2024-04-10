@@ -1,6 +1,11 @@
 # 221Bravo - OHLC Store (Open, High, Low, Close)
 The OHLC Store canister was created to store token price history. The OHLC does this by periodically fetching quotes from the [Defi Oracle Canister](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2) and using these quotes to form 'bars/ candlestick' data on several timeframes.  
 
+## deploy
+```bash
+dfx deploy ohlc_store_mk2 --network ic --argument $(dfx identity get-principal)
+```
+
 ## Getting Historic Quotes
 Users wishing to get more than the current quote can query the OHLC Store to get historic data including the currently forming bar. There are a number of methods you can use depending on what data you are needing. Historic Prices are given as the cross price (eg CKBTC/ICP) and USD price (eg CKBTC/USD). 
 

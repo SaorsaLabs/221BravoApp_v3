@@ -2,6 +2,11 @@
 The Central Processing Canister acts as the central hub of the Defi Price Oracle. Below are the main API methods for adding and managing pairs. 
 
 ### Input settings/ Canister setup
+Deploy
+```bash
+dfx deploy oracle_cpc_mk2 --network ic --argument $(dfx identity get-principal)
+```
+
 Quote Size - To ensure that quoted prices reflect the liquidity of a swap pair, our defi oracle fetches prices based on a set trade value. During the init of the canister this trade value is set to $10. This trade value can be changed by using the following method. Note variants are ICP, USD or XDR :
 
 ```bash
