@@ -53,12 +53,13 @@
     // shortAccount
 
     function onSelected(meta){
-        let indexSelected = meta.detail[0]; // -1 as count is from 1;
+        let indexSelected = meta.detail[0]; 
         selectedData = sourceData[indexSelected];
         rowSelected = true;
 	}
 
-    $: sourceData = sourceData;
+    $: sourceData;
+    $: tableData = sourceData;
 
     let headLabels = ['#', 'Account', 'Name'];
     let paginationSettings = {
@@ -74,12 +75,12 @@
 	);
     $: sourceOutput = tableMapperValues(sourceBodySliced, ['count', 'shortAccount', 'name']);
 
-    function onPageChange(e) {
-		//console.log('Paginator - event:page', e.detail);
-	}
-	function onAmountChange(e) {
-		//console.log('Paginator - event:amount', e.detail);
-	}
+    // function onPageChange(e) {
+	// 	//console.log('Paginator - event:page', e.detail);
+	// }
+	// function onAmountChange(e) {
+	// 	//console.log('Paginator - event:amount', e.detail);
+	// }
 
 </script>
 

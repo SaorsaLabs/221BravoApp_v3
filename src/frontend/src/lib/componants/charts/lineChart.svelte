@@ -10,7 +10,10 @@ export let dataArray4;
 export let labelsArray;
 export let dataset1Title = "";
 export let dataset2Title = "";
-export let colours = ['rgb(75, 192, 192)', 'rgb(134, 52, 145)', 'rgb(95, 100, 176)', 'rgb(10, 203, 241)'];
+export let dataset3Title = "";
+export let dataset4Title = "";
+export let darkMode = true;
+export let colours = ['rgb(75, 222, 202)', 'rgb(230, 0, 226)', 'rgb(202, 216, 0)', 'rgb(10, 203, 241)'];
 
 Chart.register(...registerables);
 let lineChartElement;
@@ -39,7 +42,7 @@ let lineChartElement;
         }
         if (dataArray3) {
           DS.push({
-            label: dataset2Title,
+            label: dataset3Title,
             data: dataArray3,
             fill: false,
             borderColor: colours[2],
@@ -48,7 +51,7 @@ let lineChartElement;
         }
         if (dataArray4) {
           DS.push({
-            label: dataset2Title,
+            label: dataset4Title,
             data: dataArray4,
             fill: false,
             borderColor: colours[3],
@@ -56,15 +59,10 @@ let lineChartElement;
           });
         }
         
-        const labels = labelsArray;
-        const data = {
-          labels: labels,
-          datasets: DS,
-        };
-               new Chart(lineChartElement, {
-         type: 'line',
-         data: data,
-         options: {
+        // Ledgend Colour
+        let opts;
+        if (darkMode == true) {
+          opts = {
             scales: {
                 x: {
                     ticks: {
@@ -85,6 +83,41 @@ let lineChartElement;
                 },
             },
           }
+        }
+        if (darkMode == false) {
+          opts = {
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'black'  // x-axis labels color
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: 'black'  // y-axis labels color
+                    },
+                },
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'black' // Legend labels color
+                    }
+                },
+            },
+          }
+        }
+
+        const labels = labelsArray;
+        const data = {
+          labels: labels,
+          datasets: DS,
+        };
+               new Chart(lineChartElement, {
+         type: 'line',
+         data: data,
+         
+         options: opts,
        });
      }
    });

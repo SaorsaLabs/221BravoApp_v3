@@ -51,7 +51,7 @@
     let paginationSettings = {
             page: 0,
             limit: 25,
-            size: chartData.length,
+            size: sourceData.length,
             amounts: [5,10, 25, 100],
         };
     

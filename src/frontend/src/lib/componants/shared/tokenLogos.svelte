@@ -5,7 +5,7 @@ import chatLogo from '$lib/images/tokenLogos/Openchat_logo.png';
 import kinicLogo from '$lib/images/tokenLogos/kinic.png';
 import hotLogo from '$lib/images/tokenLogos/hotOrNot.png';
 import ghostLogo from '$lib/images/tokenLogos/ghost_logo.png';
-import snsLogo from '$lib/images/tokenLogos/SNS1_Logo.png';
+import snsLogo from '$lib/images/tokenLogos/DKPLogo.png';
 import modLogo from '$lib/images/tokenLogos/ModClub.png';
 import catLogo from '$lib/images/tokenLogos/catalyzeLogo.png';
 import boomLogo from '$lib/images/tokenLogos/BoomLogo.png'; 
@@ -20,6 +20,11 @@ import gldLogo from  '$lib/images/tokenLogos/goldDAO.png';
 import traxLogo from  '$lib/images/tokenLogos/traxLogo.png';
 import sneedLogo from '$lib/images/tokenLogos/sneedLogo.png';
 import exeLogo from '$lib/images/tokenLogos/Windoge98Logo.jpg';
+import iclLogo from '$lib/images/tokenLogos/iclLogo.png';
+import elnaLogo from '$lib/images/tokenLogos/elnaLogo.png';
+import querioLogo from '$lib/images/tokenLogos/querioLogo.png';
+import openFPL from '$lib/images/tokenLogos/openLogo.png';
+import icsLogo from '$lib/images/tokenLogos/ICSLogo.png';
 
 export let token;
 export let width; // eg "100%" , "50px"
@@ -43,7 +48,7 @@ $: token;
     <img src={hotLogo} alt='Token Logo' width="{width}"/>
 {:else if token == "GHOST"}
     <img src={ghostLogo} alt='Token Logo' width="{width}"/>
-{:else if token == "SNS1"}
+{:else if token == "DKP"}
     <img src={snsLogo} alt='Token Logo' width="{width}"/>
     <!-- MODCLUB need depricated! -->
 {:else if token == "MODCLUB"}
@@ -76,5 +81,15 @@ $: token;
     <img src={sneedLogo} alt='Token Logo' width="{width}"/>
 {:else if token == "EXE"}
     <img src={exeLogo} alt='Token Logo' width="{width}"/>
+{:else if token == "ICL"}
+<img src={iclLogo} alt='Token Logo' width="{width}"/>
+{:else if token == "ELNA"}
+<img src={elnaLogo} alt='Token Logo' width="{width}"/>
+{:else if token == "QUERIO"}
+<img src={querioLogo} alt='Token Logo' width="{width}"/>
+{:else if token == "FPL"}
+<img src={openFPL} alt='Token Logo' width="{width}"/>
+{:else if token == "ICS"}
+<img src={icsLogo} alt='Token Logo' width="{width}"/>
 {/if}
 </div>

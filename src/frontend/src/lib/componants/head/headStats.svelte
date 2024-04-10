@@ -183,16 +183,18 @@
 					<!-- Alert Modal Button -->
 					<!-- <button >
 						.
-					</button>	 -->
+					</button> -->
+	
+					<!-- Alert Button -->
 					 <span>
-
 						{#if loggedIn == "true" || loggedIn == true}
 							<button class="pl-1 pr-1 pt-1 bg-tertiary-500/50 rounded" on:click={()=>{ handleAlertClick() }}>
 								<img src={bell} alt="alerts" width="20px"/>
 							</button>	
 						{/if}
 					</span> 
-					<!-- Address Book Modal -->
+
+					<!-- Address Button -->
 					 <span>
 						 {#if loggedIn == "true" || loggedIn == true}
 							<button class="pr-1 pl-1 pt-1 bg-tertiary-500/50 rounded" on:click={()=>{ handleAddressClick() }}>

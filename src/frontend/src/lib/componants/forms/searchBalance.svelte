@@ -142,7 +142,7 @@
                 // other tokens
                 for(k=0; k<priceLen; k++){
                     matchTerm = `${searchResult.data[i].ticker}/`;
-                    if (priceData[k].token_cross.includes(matchTerm)){
+                    if (priceData[k]?.token_cross?.includes(matchTerm)){
                         searchResult.data[i].tokenPrice = priceData[k].average_price;
                     }
                 }
@@ -167,16 +167,33 @@
             let adjRecBalance;
             let adjPrice;
             let adjPriceRaw;
+            let sum1, sum2, sum3;
+            let sum1A, sum2A, sum3A;
+            let sum4, sum4A;
+            let sum5, sum5A;
+            let sum6, sum6A;
             for(i = 0; i< searchLen; i++){
                 // balances
-                adjBalance = Number(searchResult.data[i].balance)/ Math.pow(10, searchResult.data[i].decimals);
-                adjSentBalance = Number(searchResult.data[i].sent[1])/ Math.pow(10, searchResult.data[i].decimals);
-                adjRecBalance = Number(searchResult.data[i].received[1])/ Math.pow(10, searchResult.data[i].decimals);
-                accountTotalDollar += adjBalance*searchResult.data[i].tokenPrice;
-                accountSentDollar += adjSentBalance*searchResult.data[i].tokenPrice;
-                accountRecDollar += adjRecBalance*searchResult.data[i].tokenPrice;
-                adjPrice = formatter.format((adjBalance*searchResult.data[i].tokenPrice));
-                adjPriceRaw = adjBalance*searchResult.data[i].tokenPrice;
+                sum1 = Number(searchResult.data[i].balance)/ Math.pow(10, searchResult.data[i].decimals);
+                sum1A =isNaN(sum1) ? 0 : sum1;
+                adjBalance = sum1A;
+                sum2 = Number(searchResult.data[i].sent[1])/ Math.pow(10, searchResult.data[i].decimals);
+                sum2A = isNaN(sum2) ? 0 : sum2;
+                adjSentBalance = sum2A;
+                sum3 = Number(searchResult.data[i].received[1])/ Math.pow(10, searchResult.data[i].decimals);
+                sum3A = isNaN(sum3) ? 0 : sum3;
+                adjRecBalance = sum3A;
+                sum4 = adjBalance*searchResult.data[i].tokenPrice;
+                sum4A = isNaN(sum4) ? 0 : sum4;
+                accountTotalDollar += sum4A;
+                sum5 = adjSentBalance*searchResult.data[i].tokenPrice;
+                sum5A = isNaN(sum5) ? 0 : sum5;
+                accountSentDollar += sum5A;
+                sum6 = adjRecBalance*searchResult.data[i].tokenPrice;
+                sum6A = isNaN(sum6) ? 0 : sum6;
+                accountRecDollar += sum6A;
+                adjPrice = formatter.format(sum4A);
+                adjPriceRaw = sum4A;
                 // tx counts
                 totalSentCount += searchResult.data[i].sent[0];
                 totalRecCount += searchResult.data[i].received[0];

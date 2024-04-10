@@ -4,14 +4,14 @@ import BasicTable from '../tables/basicTable.svelte';
 import { onMount } from 'svelte';
 import Loading from '../shared/loading.svelte';
 import HelpIconLight from '$lib/images/icons/helpLight.png';
-import { getAllTokenData } from '../../code/utils';
+import { getAllTokenData, parseTicker } from '../../code/utils';
 
 let data;
 let head = [
     {public: "Alert ID", data: "id", button: false}, 
-    {public: "Cross", data: "cross", button: false}, 
+    {public: "Cross", data: "displayCross", button: false}, 
     {public: "Direction", data: "arrow", button: false},  
-    {public: "Price Level", data: "price", button: false},
+    {public: "Price Level ($)", data: "price", button: false},
     {public: "-", data: "button", button: true, buttonText: "Delete Alert"},
 ];
 let dataLoaded = false;
@@ -44,13 +44,17 @@ let alertWarningText = "";
 function loadDropdown(){
     dropDownloaded = false;
     allTokens = getAllTokenData();
+    let NT;
+    for(let i=0; i<allTokens?.length ?? 0; i++){
+        NT = parseTicker(allTokens[i].tradePair);
+        allTokens[i].displayCross = `${NT.base}/USD`;
+    }
     dropDownloaded = true;
 }
 
 // Load User Data/ Alerts
 async function loadData(){
     backendUserData = await getUserData();
-    //console.log(backendUserData);
     if (backendUserData == "Not Logged In") { 
         hasError = true;
         errorText = "You are not logged in. Please login and try again.";
@@ -87,8 +91,14 @@ async function fetchUserAlerts(){
         noAlerts = true;
         dataLoaded = true;
     } else {
+        // parseTicker
         data = res[0];
+        let PT;
+        let NT;
         for(let i=0; i<data.length; i++){
+            PT = parseTicker(data[i].cross);
+            NT = `${PT.base}/USD`;
+            data[i].displayCross = NT;
             if (data[i].direction == "0") { data[i].arrow = "⬇️ Cross Below" } else { data[i].arrow = "⬆️ Cross Above" };
         }
         dataLoaded = true;
@@ -119,19 +129,11 @@ async function addAlert(){
         return;
     }
     let save = await addUserAlert(saveCross, Number(alertPrice), Number(directionDropdown));
-    alertWarningText = `Alert added ID : ${save}`;
+    alertWarningText = `${save}`;
     alertPrice = undefined;
     directionDropdown = undefined;
     savingAlert = false;
 }
-
-// async function addAlert(){
-//     console.log("CLICKED")
-//     let data = await addUserAlert("CHAT/ICP", 0.60, 0);
-//     console.log(data);
-// }
-
-
 
 $: data;
 $: showPage;
@@ -171,7 +173,7 @@ $: showPage;
             Add New
         </button>
     {:else}
-        <button class="bg-tertiary-500/50 rounded m-2 pl-1 pr-1" on:click={() => { showPage = "newAlert"; alertWarningText = ""; }}>
+        <button class="bg-tertiary-500/50 rounded m-2 pl-1 pr-1" on:click={() => { showPage = "newAlert"; alertWarningText = ""; loadDropdown(); }}>
            Add New
         </button>
     {/if}
@@ -225,7 +227,7 @@ $: showPage;
             {#if dropDownloaded == true}
                 <select class="select" bind:value={saveCross}>
                     {#each allTokens as T}
-                        <option value={T.tradePair} >{T.tradePair}</option>
+                        <option value={T.tradePair} >{T.displayCross}</option>
                     {/each}
                 </select>
             {/if}
