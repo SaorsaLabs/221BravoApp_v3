@@ -1,0 +1,25 @@
+[package]
+name = "oc_bot_mk2"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+path = "lib.rs"
+crate-type = ["cdylib"]
+
+[dependencies]
+ic-cdk = "0.12.0"
+ic-cdk-macros = "0.8.1"
+candid = "0.10.0"
+serde = "1.0.159"
+ic-cdk-timers = "0.6.0"
+ciborium = "0.2.1"
+ic-stable-structures = "0.6.0"
+
+# oc types
+types = { git = "https://github.com/open-chat-labs/open-chat", rev = "54fe2fdc9c8cd0e540111d1bba5070855f056ba7" }
+# oc bot api
+bot_api = { git = "https://github.com/open-chat-labs/open-chat", rev = "54fe2fdc9c8cd0e540111d1bba5070855f056ba7" }
+# oc user canister
+user_canister = { git = "https://github.com/open-chat-labs/open-chat", rev = "54fe2fdc9c8cd0e540111d1bba5070855f056ba7" }

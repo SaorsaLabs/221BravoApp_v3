@@ -1,0 +1,5 @@
+service : (text) -> {
+    "register": () -> (text);
+    "send_message": (text, text) -> (text);
+    "get_bot_name": () -> (text);
+}
