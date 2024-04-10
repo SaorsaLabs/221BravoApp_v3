@@ -6,6 +6,7 @@ Quote Size - To ensure that quoted prices reflect the liquidity of a swap pair, 
 
 ```bash
 # replace ORACLE_CANISTER_ID with the principal id of your oracle canister
+
 dfx canister call ORACLE_CANISTER_ID --network ic set_quote_trade_size '(20: float64, variant {"USD"})'
 ```
 
@@ -16,6 +17,7 @@ Currently there are 3 ICP Marketplaces that the MIB canisters can interface with
 ```bash
 # Available variants variant {"ICDEX"} variant {"SONIC"} variant {"ICPSWAP"}
 # replace ORACLE_CANISTER_ID with the principal id of your oracle canister
+
 dfx canister call ORACLE_CANISTER_ID --network ic add_mib_canister '("your-mib-canister-id", "Name-your-mib-here", variant {"ICDEX"} )'
 ```
 
@@ -105,7 +107,12 @@ The Defi Oracle is designed to automatically fetch prices every X number of seco
 
 ```bash
 # start the timer - CPC canister with a main quotes timer of 60 seconds and 900 seconds for Stable Quotes fetching. 
+
 dfx canister call ${oracleCanister} --network start_quotes_timer '(60: nat64, 900: nat64)'
+
+# stop the timer 
+
+dfx canister call ${oracleCanister} --network stop_all_timers
 ```
 
 ### Price History
