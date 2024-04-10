@@ -29,13 +29,13 @@ Users wishing to get more than the current quote can query the OHLC Store to get
 You can get the available token crosses by querying ‘get_all_crosses’ 
 
 ```bash
-dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic  get_all_crosses
+dfx canister call qzqml-yiaaa-aaaak-qcp4q-cai --network ic  get_all_crosses
 ```
 
 For all price data for a certain token cross (example below is for CHAT/ICP)
 
 ```bash
-dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic get_all_data '("CHAT/ICP")' 
+dfx canister call qzqml-yiaaa-aaaak-qcp4q-cai --network ic get_all_data '("CHAT/ICP")' 
 ```
 
 You can get specific timeframes by calling one of the following methods 
@@ -50,3 +50,6 @@ Each of these methods takes two arguments. The first being the token cross as te
 ```bash
 dfx canister call lo4kk-kyaaa-aaaak-qcska-cai --network ic get_m5_data '("CHAT/ICP", 50 :nat64)' 
 ```
+
+## Add New Token to Oracle
+See readme file in the oracle_cpc_mk2 folder.
