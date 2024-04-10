@@ -1,0 +1,69 @@
+
+// Oracle MIB v0.0.1
+// NOTE - Remember init args 
+
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+
+type LogEntry = record {timestamp: text; text: text};
+
+type Marketplace = variant {
+    ICDEX : null;
+    ICPSWAP : null;
+    SONIC : null;
+};
+
+type Token = record {
+    ticker: text;
+    ledger: text;
+    decimals: nat32;
+};
+
+type MarketplaceDetails = record {
+    marketplace: Marketplace;
+    canister_id: text;
+    active: bool;
+    reverse_cross: bool;
+    unit_size: nat64; 
+};
+
+type SwapPairDetails = record {
+    swap_id: text;
+    token0: Token;
+    token1: Token;
+    marketplaces: vec MarketplaceDetails;
+    swap_type: nat8;
+    active: bool;
+};
+
+type ExchangeSnapshot = record {
+    snapshot_time: nat64;
+    swap_pair: text;
+    exchange: Marketplace;
+    price: float64;
+    bid: nat;
+    ask: nat;
+    spread_pct: float64;
+    liquidity: record { nat64; nat64 };
+}
+
+service : (text) -> {
+    // Canister Management
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "get_canister_version": () -> (text) query;
+
+    // APP
+    "get_assigned_marketplace": () -> (text) query;
+    "set_assigned_marketplace": (Marketplace) -> (text);
+    "add_token_cross": (SwapPairDetails) -> (text);
+    "remove_token_cross": (text) -> (text);
+    "get_all_token_crosses": () -> (vec text) query;
+    "set_token_cross_status": (text, bool) -> (text);
+    "get_swap_details": (text) -> (opt SwapPairDetails) query;
+    "test_call": () -> (opt vec ExchangeSnapshot);
+}

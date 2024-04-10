@@ -1,0 +1,142 @@
+// Oracle CPC v0.0.1
+// NOTE - Remember init args 
+
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+
+type LogEntry = record {timestamp: text; text: text};
+
+type Marketplace = variant {
+    ICDEX : null;
+    ICPSWAP : null;
+    SONIC : null;
+};
+
+type Token = record {
+    ticker: text;
+    ledger: text;
+    decimals: nat32;
+};
+
+type AddSwapInput = record {
+    swap_id: text;
+    token0: Token;
+    token1: Token;
+    swap_type: nat8;
+    init_quote: float64;
+};
+
+type MarketplaceDetails = record {
+    marketplace: Marketplace;
+    canister_id: text;
+    active: bool;
+    reverse_cross: bool;
+    unit_size: nat64; 
+};
+
+type SwapPairDetails = record {
+    swap_id: text;
+    token0: Token;
+    token1: Token;
+    marketplaces: vec MarketplaceDetails;
+    swap_type: nat8;
+    active: bool;
+};
+
+type CrossRecord = record { text; bool};
+
+type MIBV1 = record {
+  name: text; 
+  canister: text; 
+  crosses: vec CrossRecord; // cross + active
+  assigned_marketplace: Marketplace
+};
+
+type ExchangeSnapshot = record {
+    snapshot_time: nat64;
+    swap_pair: text;
+    exchange: Marketplace;
+    price: float64;
+    bid: nat;
+    ask: nat;
+    spread_pct: float64;
+    liquidity: record { nat64; nat64 };
+};
+
+type OverviewV1 = record {
+    token_cross: text;
+    snapshot_time: nat64;
+    average_price: float64;
+    exchange_snapshots: vec ExchangeSnapshot;
+    cross_to_usd: float64;
+};
+
+type QuoteCurrency = variant {
+    ICP: null;
+    USD: null;
+    XDR: null;
+};
+
+type Metrics = record {
+    total_snapshots_taken: nat64;
+    total_http_outcalls: nat64;
+    total_errors: nat64;
+    total_api_requests_v1: nat64;
+};
+
+// TESTING TYPES
+type InternalRateEntry = record {
+    swap_pair: text; 
+    quote: float64;
+};
+type InternalRates = record {
+    data: vec InternalRateEntry;
+};
+
+service : (text) -> {
+    // Canister Management *ADMIN GATED
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_cycles_balance": () -> (nat64) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    "deposit_cycles": () -> ();
+    "canister_version": () -> (text) query;
+
+    // Manage MIBS *ADMIN GATED
+    "add_mib_canister": (text, text, Marketplace) -> (text); // canister, name, marketplace
+    "remove_mib_canister": (text) -> (text);
+    "get_all_mib_canisters": () -> (vec MIBV1) query;
+    "set_mib_marketplace": (text, Marketplace) -> (text);
+    "add_pair_to_mib_canister": (text, text) -> (text);
+    "remove_pair_from_mib_canister": (text, text) -> (text);
+   
+    // Manage Swaps *ADMIN GATED
+    "add_swap_to_oracle": (AddSwapInput) -> (text);
+    "remove_swap_from_oracle": (text) -> (text);
+    //"set_swap_status": (text, bool) -> (text);                       
+    "add_marketplace_to_swap": (text, MarketplaceDetails) -> (text);
+    "remove_marketplace_from_swap": (text, Marketplace) -> (text);
+    //"set_marketplace_status": (text, Marketplace, bool) -> (text);   
+    "update_pair_status": (text, opt Marketplace, bool) -> (text);
+    "get_all_swap_pairs": () -> (vec text) query;
+    "get_all_swap_marketplaces": (text) -> (opt vec MarketplaceDetails) query;
+    "get_swap_details": (text) -> (opt SwapPairDetails) query;
+
+    // Misc *ADMIN GATED
+    "get_metrics": () -> (Metrics) query;
+
+    // CPC *AUTHORISED GATE
+    "get_quote_v1": (text, QuoteCurrency) -> (opt OverviewV1); // cross as text
+    "get_all_quotes_v1": (QuoteCurrency) -> (vec OverviewV1);
+    "get_last_update_time": () -> (nat64, nat64) query;
+
+    // Timers *ADMIN GATED
+    "stop_all_timers": () -> (text);
+    "start_quotes_timer": (nat64, nat64) -> (text); // main quotes timer, stable quotes timer
+
+    // Testing
+    "get_internal_rates": () -> (InternalRates) query;
+    "update_internal_rate": (text, float64) -> ();
+    
+}

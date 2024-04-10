@@ -1,0 +1,35 @@
+0.0.2 - Move get quote pairs into auth gate. 
+
+
+ADD TOKEN PROCESS
+- add swap pair (shared/utils, mib/utils)
+- populate init (remember init price quotes)
+- update candid (mib/ cpc)
+- test via test mib canister.. then launch
+
+
+
+- add function to aleart when outdated quotes detected.. (last update time > 5mins - OC Bot alert!)
+- CHECK/ FIX ckETH quote on IC DEX
+
+// ICP Exchange rate canister
+uf6dk-hyaaa-aaaaq-qaaaq-cai
+
+// Uniswap ticks
+https://support.uniswap.org/hc/en-us/articles/7423663459597
+
+// ICP SWAP ALL markets
+https://uvevg-iyaaa-aaaak-ac27q-cai.raw.ic0.app/pairs
+
+// Helix markets 
+https://helix-ex.github.io/apidocs/docs/market-data/#market-data-api
+
+// SONIC 
+https://docs.sonic.ooo/developer-guides/swap-example
+https://github.com/sonicdex/sonic-js/blob/develop/src/math/liquidity.ts
+
+// Exchange rates
+https://fixer.io/documentation
+
+// frontend canister
+https://github.com/dfinity/sdk/tree/master/src/canisters/frontend/ic-frontend-canister
