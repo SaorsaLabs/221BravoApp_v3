@@ -1,0 +1,9 @@
+pub const CREATE_CANISTER_CYCLES: u128 = 1_500_000_000_000; // 1.5T
+pub const SAORSA_ADMIN: &str = "";
+pub const CYCLES_MANAGER_CANISTER: &str = "";
+
+// TOKEN BACKEND CANISTERS
+pub const CYCLES_REQUIRED_NEW_TOKEN_BACKEND: u64 = 10_000_000_000_000; // 10T cycles
+pub const SUPER_INDEX_WASM_NAME: &str = "SUPIDX";
+pub const SUPER_STATS_WASM_NAME: &str = "SUPSTAT";
+pub const TX_STORE_WASM_NAME: &str = "TXSTORE";

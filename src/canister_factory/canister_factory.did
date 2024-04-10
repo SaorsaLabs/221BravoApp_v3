@@ -1,0 +1,38 @@
+type MemoryStats = record {memory: nat64; heap_memory: nat64};
+type LogEntry = record {timestamp: text; text: text};
+type ExampleData = record {
+    example_data1: text;
+    example_data2: nat64
+};
+type Metrics = record { total_errors: nat64; total_api_requests: nat64 };
+type TextTuple = record {text; text};
+
+service : (text) -> {
+
+    // Canister Management (admin gated)
+    "add_authorised": (text) -> (text);
+    "remove_authorised": (text) -> (text);
+    "add_admin": (text) -> (text);
+    "remove_admin": (text) -> (text);
+    "get_all_authorised": () -> (vec text) query;
+    "get_all_admins": () -> (vec text) query;
+    "get_logs": () -> (opt vec LogEntry) query;
+    "get_memory_stats": () -> (MemoryStats) query;
+    
+    // Canister Management (not gated)
+    "get_cycles_balance": () -> (nat64) query;
+    "deposit_cycles": () -> ();
+    "get_canister_version": () -> (text) query;
+
+    // Factory Methods
+    "add_wasm": (vec nat8, text, opt text) -> (text);
+    "add_wasm_chunk": (vec nat8, text) -> (text);
+    "remove_wasm": (text) -> (text);
+    "clear_wasm_vec": (text) -> (text);
+    "get_wasm_length": (text) -> (nat64) query;
+    "get_all_wasms": () -> (vec text) query;
+
+    // JOBS
+    "create_new_token_indexers": () -> (vec TextTuple);
+    "create_new_cansister_with_wasm": (text) -> (text, text);
+}
