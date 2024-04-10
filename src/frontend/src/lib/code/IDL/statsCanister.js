@@ -112,7 +112,7 @@ export const statsCanisterIDL = ({ IDL }) => {
       'get_top_account_holders' : IDL.Func(
           [IDL.Nat64],
           [IDL.Vec(HolderBalanceResponse)],
-          ['query'],
+          [],
         ),
       'get_top_principal_holders' : IDL.Func(
           [IDL.Nat64],

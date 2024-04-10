@@ -12,7 +12,7 @@ export async function getOverviewDataAllTokens(searchInput){
     let returnData = {};
     let searchAR = [];
     let tokenList = [];
-    if (searchInput == "" || searchInput == null || searchInput == undefined) return returnData;
+    if (searchInput == "" || searchInput == null ) return returnData;
     
     // sort input
     if (searchInput.includes(".") && searchInput.includes("-")){

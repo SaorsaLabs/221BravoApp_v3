@@ -6,7 +6,8 @@ import { backendCanisterIDL } from '../IDL/backend.js';
 import { genesisNftIDL } from '../IDL/genesisNFT.js';
 import { getIdentity, icActor } from '../fetch/icAgent.js';
 import { goto } from '$app/navigation';
-import { getUserData } from '../fetch/userData.js';
+import { getUserData, addUserToken } from '../fetch/userData.js';
+import { AuthClient } from "@dfinity/auth-client";
 
 // STOIC LOGIN
 async function stoicLogin() {
@@ -30,6 +31,7 @@ async function stoicLogin() {
 				authStore.set(true, EA, time, "", oc_id);
 				StoicIdentity.disconnect();
 				goto("/members/home");
+				await addUserToken();
 				return true;
 			} else {
 				authTrigger.update((n) => -1);
@@ -60,6 +62,7 @@ async function plugLogin() {
 					}
 					authStore.set(true, EA, time, "", oc_id);
 					goto("/members/home");
+					await addUserToken();
 					return true;
 				} else {
 					// Verified = false
@@ -96,6 +99,7 @@ async function bitfinityLogin() {
 					}
 					authStore.set(true, EA, time, "", oc_id);
 					goto("/members/home");
+					await addUserToken();
 					return true;
 				} else {
 					// Verified = false
@@ -109,6 +113,31 @@ async function bitfinityLogin() {
 	}
 }
 
+async function iiLogin() {
+	let authClient = await AuthClient.create();
+	authClient.login({
+		// 7 days in nanoseconds
+		maxTimeToLive: BigInt(7 * 24 * 60 * 60 * 1000 * 1000 * 1000),
+		onSuccess: async () => {
+		  await handleIIAuthenticated(authClient);
+		},
+
+		windowOpenerFeatures: `
+		left=${window.screen.width / 2 - 525 / 2},
+		top=${window.screen.height / 2 - 705 / 2},
+		toolbar=0,location=0,menubar=0,width=525,height=705
+	  `
+	  });
+}
+
+async function handleIIAuthenticated(authClient){
+	const identity = authClient.getIdentity();
+	console.log(identity.getPrincipal().toText());
+
+
+	//
+
+}
 // non-encrypted check
 async function checkHODLER(ID){
 	let res = false;
@@ -130,6 +159,7 @@ async function checkHODLER(ID){
 			if(hodlers[i][1] ==  account) { 
 				res = true;
 				acc = account;
+				break;
 			 }
 		}
 		// if holder check setup or get stats
@@ -175,4 +205,4 @@ async function encryptID(ID){
 	return encryptedID;
 }
 
-export { stoicLogin, plugLogin, bitfinityLogin};
+export { stoicLogin, plugLogin, bitfinityLogin, iiLogin};

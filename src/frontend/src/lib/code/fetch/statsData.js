@@ -30,7 +30,7 @@ export async function fetchStatsData(token){
             futuresAR[1] = statsActor.get_total_holders();
             futuresAR[2] = statsActor.get_daily_stats();
             futuresAR[3] = statsActor.get_hourly_stats();
-           // futuresAR[4] = icpActor.get_top_account_holders(100);
+           // futuresAR[4] = statsActor.get_top_account_holders(100);
             futuresAR[5] = fetchICPSupply();
             futuresAR[6] = getICPOhlcData(900, 96);
             futuresAR[7] = getICPOhlcData(86400, 7);
@@ -56,7 +56,7 @@ export async function fetchStatsData(token){
                 totalHolders: futureComplete[1],
                 dailyData: futureComplete[2],
                 hourlyData: futureComplete[3],
-               // topHolders: futureComplete[4][0]
+             //   topHolders: futureComplete[4][0]
             };
         }
         if (token != "ICP") {

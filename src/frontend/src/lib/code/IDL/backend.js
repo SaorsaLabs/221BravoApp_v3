@@ -115,5 +115,6 @@ export const backendCanisterIDL = ({ IDL }) => {
     'update_username' : IDL.Func([IDL.Text, IDL.Text], [IDL.Text], []),
     'encrypt' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
     'decrypt' : IDL.Func([IDL.Text], [IDL.Text], ['query']),
+    'add_user_tokens': IDL.Func([IDL.Text, IDL.Nat32], [IDL.Text], []),
   });
 };

@@ -31,6 +31,7 @@ export async function updateOCID(ocID){
     let ls = authStore.read();
     if (ls.data.loggedIn == true) {
         let res = await backendActor.set_user_oc_id(ls.data.user, ocID);
+        authStore.set(ls.data.loggedIn, ls.data.user, ls.data.authTime, "", ocID);
         return res;
     }
     return "Not Logged In";
@@ -62,7 +63,9 @@ export async function addUserAlert(cross, price, direction){
             direction: direction // 0 down, 1 up        
         };
         let res = await backendActor.add_price_alert(alert);
-        return res;
+
+        if (res >= 0 ) return "Alert Added";
+        else if (res == -1) return "Max Alerts Reached";
     }
     return "Not Logged In";
 }
@@ -81,6 +84,17 @@ export async function removeUserAlert(cross, id){
             direction: 0 // not required        
         };
         let res = await backendActor.remove_price_alert(alert);
+        return res;
+    }
+    return "Not Logged In";
+}
+
+export async function addUserToken(){
+    const Frontend_ID = getIdentity();
+	let backendActor = icActor(backendCanisterID, backendCanisterIDL, Frontend_ID);
+    let ls = authStore.read();
+    if (ls.data.loggedIn == true) {
+        let res = await backendActor.add_user_tokens(ls.data.user, 1);
         return res;
     }
     return "Not Logged In";
