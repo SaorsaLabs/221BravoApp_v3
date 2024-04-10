@@ -1,19 +1,11 @@
 use ic_cdk_macros::{query, update};
 use crate::core::runtime::RUNTIME_STATE;
 use super::{
-    utils::{decrypt_account, encrypt_account}, 
-    user_data::{
-        get_user_data_impl, UserData, get_user_named_accounts_impl, 
-        get_all_user_named_accounts_impl, add_user_named_accounts_impl, 
-        remove_user_named_accounts_impl, add_new_user_impl, 
-        update_username_impl, add_user_tokens_impl, backup_user_named_accounts_impl
-    }, 
-    public_accounts::{
-        get_public_named_accounts_impl, 
-        add_public_named_accounts_impl, 
-        get_all_public_named_accounts_impl, 
-        remove_public_named_accounts_impl
-    }, account_identifier::{get_single_account_impl, get_multiple_account_impl}, top_tokens::{update_icrc1_total_supply, TokenData, update_price_data, HolderBalanceResponse, TopHolderData, update_top_holders}
+    account_identifier::{get_multiple_account_impl, get_single_account_impl}, public_accounts::{
+        add_public_named_accounts_impl, get_all_public_named_accounts_impl, get_public_named_accounts_impl, remove_public_named_accounts_impl
+    }, top_tokens::{update_icrc1_total_supply, update_price_data, update_top_holders, HolderBalanceResponse, TokenData, TopHolderData}, user_data::{
+        add_new_user_impl, add_user_named_accounts_impl, add_user_oc_id_impl, add_user_tokens_impl, backup_user_named_accounts_impl, get_all_user_named_accounts_impl, get_user_data_impl, get_user_named_accounts_impl, remove_user_named_accounts_impl, update_username_impl, UserData
+    }, utils::{decrypt_account, encrypt_account}
 };
 
 
@@ -153,7 +145,8 @@ fn update_username(user_account: String, user_name: String) -> String {
     RUNTIME_STATE.with(|s| {
         s.borrow().data.check_admin(ic_cdk::caller().to_text());
     });
-    update_username_impl(user_account, user_name)
+    let ua = decrypt_account(&user_account);
+    update_username_impl(ua, user_name)
 }
 
 #[update]
@@ -161,7 +154,17 @@ fn add_user_tokens(user_account: String, user_tokens: u32) -> String {
     RUNTIME_STATE.with(|s| {
         s.borrow().data.check_admin(ic_cdk::caller().to_text());
     });
-    add_user_tokens_impl(user_account, user_tokens)
+    let ua = decrypt_account(&user_account);
+    add_user_tokens_impl(ua, user_tokens)
+}
+
+#[update]
+fn set_user_oc_id(user_account: String, oc_id: String) -> String {
+    RUNTIME_STATE.with(|s| {
+        s.borrow().data.check_admin(ic_cdk::caller().to_text());
+    });
+    let ua = decrypt_account(&user_account);
+    add_user_oc_id_impl(ua, oc_id)
 }
 
 // Account Identifier tools 

@@ -1,5 +1,10 @@
 
-type UserData = record { user_account: text; user_name: text; user_tokens: nat32; }; 
+type UserData = record { 
+    user_account: text; 
+    user_name: text; 
+    user_tokens: nat32;
+    user_oc_principal: opt text;
+}; 
 type HolderData = record { nat32; text; }; 
 type MemoryStats = record {memory: nat64; heap_memory: nat64};
 type LogEntry = record {timestamp: text; text: text};
@@ -64,6 +69,7 @@ service : (text) -> {
     "add_new_user": (text) -> (text);
     "update_username": (text, text) -> (text);
     "update_user_tokens": (text, nat32) -> (text);
+    "set_user_oc_id": (text, text) -> (text);
     
     // account tools (authorised gate)
     "get_single_account": (text, nat32) -> (text) query;

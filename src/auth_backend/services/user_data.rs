@@ -238,6 +238,34 @@ pub fn add_user_tokens_impl(user_account: String, user_tokens: u32) -> String {
     }
 }
 
+pub fn add_user_oc_id_impl(user_account: String, oc_id: String) -> String {
+    let is_some = USER_MAP.with(|s|{
+        s.borrow().get(&user_account).is_some()
+    });
+
+    match is_some {
+        true => {
+            USER_MAP.with(|s|{
+                let data = s.borrow().get(&user_account);
+                match data {
+                    Some(mut value) => {
+                        value.user_oc_principal = Some(oc_id);
+                        s.borrow_mut().insert(user_account, value);
+                        return String::from("Added OC ID to User");
+                    },
+                    None => {
+                        // should never get here!
+                        return String::from("Can't update OC ID - Account doesn't exist");
+                    } 
+                }
+            })
+        },
+        false => {
+            return String::from("Can't update tokens - Account doesn't exist");
+        }
+    }
+}
+
 pub fn backup_user_named_accounts_impl() -> Option<Vec<(String, String, String)>> {
    let mut op_vec: Vec<(String, String, String)> = Vec::new();
    USER_MAP.with(|s|{
