@@ -1,5 +1,5 @@
 # 221Bravo - Price Alert Canister
-The price alert canister work as part of a trio of canisters including The [Defi Oracle](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2) and [Open Chat Bot Canister](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/ocBot_mk2). 
+The price alert canister work as part of a trio of canisters including the [Defi Oracle](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2) and [Open Chat Bot Canister](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/ocBot_mk2). 
 
 The alert canister is governed by a timer which initiates a call to the defi oracle to fetch the latest ICP token prices. The canister then checks these against user alerts (set by the 221Bravo Frontend). If any alerts are 'triggered' the alert canister calls the Open Chat Bot canister which then sends an alert message to the user's open chat account. 
 
