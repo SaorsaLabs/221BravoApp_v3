@@ -26,7 +26,9 @@
 
     const formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'USD',
+        // minimumFractionDigits: 3,
+        // maximumFractionDigits: 8,
     });
     const formatNumber = new Intl.NumberFormat('en-US', {
         maximumFractionDigits: 0,
@@ -80,7 +82,8 @@
     let dTopTX  = [];
     let dTopBurn, dTopMint;
     let hTopTX, hTopBurn, hTopMint;
-    let cross; 
+    let cross;
+    let isDarkMode = false;
 	
 	async function callPromise(){
 		new Promise(async (resolve, reject) => {
@@ -168,10 +171,8 @@
 
     function updateStats(data){
         if(!data) return;
-
         // cross
-        cross = data?.topHolders?.cross;
-
+        cross = data?.tokenData?.tradePair;
         // clear
         hourlyTOTvalues = [];
         hourlyTOTlabels = [];
@@ -182,11 +183,17 @@
         chartDecimals = data.tokenData.chartDecimals;
         teamWebsite = data.tokenData.links[0].url;
         tradeUrl = data.tokenData.tradeURL;
-        change24 = Number(data.priceChangeData.change24).toFixed(2);
-        change7d = Number(data.priceChangeData.change7d).toFixed(2);
-        marketcap = formatter.format(data.priceChangeData.mcap);
-        supply = formatNumber.format(data.priceChangeData.supply);
-        supplyRaw = data.priceChangeData.supply;
+        if (data?.priceChangeData) {
+            change24 = Number(data.priceChangeData.change24).toFixed(2);
+            change7d = Number(data.priceChangeData.change7d).toFixed(2);
+            marketcap = formatter.format(data.priceChangeData.mcap);
+            supply = formatNumber.format(data.priceChangeData.supply);
+            supplyRaw = data.priceChangeData.supply;
+            let previousSupplyHR = Number(data.priceChangeData.supply) - (hourlyMBT[0] - hourlyMBT[1]);
+            supplyChangeHR = formatNumber3dp.format(((hourlyMBT[0] - hourlyMBT[1]) / previousSupplyHR) * 100);
+            let previousSupplyDY = Number(data.priceChangeData.supply) - (dailyMBT[0] - dailyMBT[1]);
+            supplyChangeDY = formatNumber3dp.format(((dailyMBT[0] - dailyMBT[1]) / previousSupplyDY) * 100);   
+        }
         uniqueACS = formatNumber.format(data.totalHolders.total_accounts);
         uniquePRS = formatNumber.format(data.totalHolders.total_principals);
         // hourly mint/ burn/ transfer
@@ -196,8 +203,7 @@
         hourlyMBTformat[0] = formatNumber3dp.format(hourlyMBT[0]);
         hourlyMBTformat[1] = formatNumber3dp.format(hourlyMBT[1]);
         hourlyMBTformat[2] = formatNumber3dp.format(hourlyMBT[2]);
-        let previousSupplyHR = Number(data.priceChangeData.supply) - (hourlyMBT[0] - hourlyMBT[1]);
-        supplyChangeHR = formatNumber3dp.format(((hourlyMBT[0] - hourlyMBT[1]) / previousSupplyHR) * 100);
+
         // daily mint/ burn/ transfer
         dailyMBT[0] = Number(Number(data.dailyData.mint_stats.total_value) / Math.pow(10, data.tokenData.decimals)).toFixed(3);
         dailyMBT[1] = Number(Number(data.dailyData.burn_stats.total_value) / Math.pow(10, data.tokenData.decimals)).toFixed(3);
@@ -205,12 +211,13 @@
         dailyMBTformat[0] = formatNumber3dp.format(dailyMBT[0]);
         dailyMBTformat[1] = formatNumber3dp.format(dailyMBT[1]);
         dailyMBTformat[2] = formatNumber3dp.format(dailyMBT[2]);
-        let previousSupplyDY = Number(data.priceChangeData.supply) - (dailyMBT[0] - dailyMBT[1]);
-        supplyChangeDY = formatNumber3dp.format(((dailyMBT[0] - dailyMBT[1]) / previousSupplyDY) * 100);        
+     
         // top holders
         if (token != "ICP"){
             topAcHolders = data.topHolders?.accounts;
             topPrHolders = data.topHolders?.principals;
+        } else {
+            topAcHolders = data.topHolders?.accounts;
         }
         let topPrHolderLen = topPrHolders?.length ?? 0;
         if (topPrHolderLen > 0) {hasPrincipalHolders = true};
@@ -280,8 +287,29 @@
         mpLoaded = true;
     }
 
+    
     onMount(() => {
-		loadWorker()
+        
+    const updateMode = () => {
+        resRecdChart = false;
+        clearInterval(tmr);
+        isDarkMode = document.documentElement.classList.contains('dark');
+        loadWorker();
+    };
+    // Initial check
+    updateMode();
+    // Listen for class changes on the html element
+    const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
+        if (mutation.attributeName === "class") {
+            updateMode();
+        }
+        });
+    });
+    observer.observe(document.documentElement, { attributes: true });
+    return () => {
+        observer.disconnect();
+    }    
     });
 
 	onDestroy(() => {
@@ -290,6 +318,7 @@
 
     $: chartDecimals = chartDecimals;
     $: chartData = chartData;
+    $: isDarkMode;
 </script>
 
 <svelte:head>
@@ -377,7 +406,7 @@
                             </table>
                         </div>
                         {#if resRecdChart == true}
-                            <BasicCandleChart height={400} width={750} data={chartData} chartDecimals={chartDecimals}/>
+                            <BasicCandleChart height={400} width={750} data={chartData} chartDecimals={chartDecimals} darkMode={isDarkMode}/>
                             <p class="text-xs">Created using <a href="https://github.com/tradingview/lightweight-charts" target="_blank">Lightweight-charts</a></p>
                         {:else}
                             <Loading/>

@@ -3,6 +3,7 @@
 	import Head from "../../lib/componants/head/head.svelte";
 	import HeadStats from "../../lib/componants/head/headStats.svelte";
 	import Foot from "../../lib/componants/foot/foot.svelte";
+    import { onMount, onDestroy } from 'svelte';
 	let ex = 0;
 	let examples = [
 		"https://szqsa-nyaaa-aaaal-qbjua-cai.raw.ic0.app/546.html",
@@ -11,6 +12,13 @@
 		"https://t243g-zaaaa-aaaal-qbjsq-cai.raw.ic0.app/205.html",
 		"https://t243g-zaaaa-aaaal-qbjsq-cai.raw.ic0.app/265.html"
 		];
+    onMount(() => {
+
+    });
+
+	onDestroy(() => {
+
+	});
 </script>
 
 <svelte:head>

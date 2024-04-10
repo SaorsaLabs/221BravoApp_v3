@@ -4,7 +4,7 @@
 	import HeadStats from "../../../lib/componants/head/headStats.svelte";
 	import Foot from "../../../lib/componants/foot/foot.svelte";
     import {_slugData} from './+page';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import Loading from '../../../lib/componants/shared/loading.svelte';
     import { getFullFromID } from '../../../lib/code/fetch/accountSearch.js';
     import { shortenString, nanoToDate } from '../../../lib/code/utils.js';

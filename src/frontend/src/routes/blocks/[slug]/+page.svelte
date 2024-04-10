@@ -219,6 +219,13 @@
                                 </ul>
                             </nav>
                             {/if}
+                            
+                            <!-- Output/ warning -->
+                            <!-- {#if showWarning == true}
+                                <div class="min-width-3/6">
+                                    <p class="text-warning-500">{warnText}</p>
+                                </div>
+                            {/if} -->
                         </div>
                     </div>
                 </div>
