@@ -28,6 +28,19 @@ Each of these methods takes two arguments. The first being the token cross as te
 ```bash
 dfx canister call YOUR_OHLC_CANISTER_ID --network ic get_m5_data '("CHAT/ICP", 50 :nat64)' 
 ```
+### Adding new crosses
+Once you have setup a new cross on your defi oracle [See Here](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2/oracle_cpc_mk2) you can then add that cross to the OHLC Canister. NOTE - Any new cross will start from 00:00 UTC to ensure that bars align with other crosses. For example - if you add the token at 18:00 UTC the OHLC canister will not save any fetched quotes for the first six hours (until 00:00 UTC)  
+
+```bash
+# EG adding CHAT/ICP to the OHLC Store. Note - this cross should match the cross on the Oracle CPC exactly
+
+dfx canister call YOUR_OHLC_CANISTER_ID --network ic add_cross '("CHAT/ICP")' 
+
+# Removing the cross from the OHLC Store. WARNING - This will wipe all data for the cross! 
+
+dfx canister call YOUR_OHLC_CANISTER_ID --network ic remove_cross '("CHAT/ICP")' 
+```
+
 ### Timers
 The OHLC Canister designed to automatically fetch prices every X number of seconds. We would recommend  that this is set to 60 seconds as it balances the requirement for accurate data with the cost of update call to fetch the data. The timer APIs can be called as follows:
 
