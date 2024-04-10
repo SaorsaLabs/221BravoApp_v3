@@ -1,55 +1,51 @@
-# 221Bravo - OHLC Store (Open, High, Low, Close)
-The OHLC Store canister was created to store token price history. The OHLC does this by periodically fetching quotes from the [Defi Oracle Canister](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2) and using these quotes to form 'bars/ candlestick' data on several timeframes.  
+# 221Bravo - Price Alert Canister
+The price alert canister work as part of a trio of canisters including The [Defi Oracle](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2) and [Open Chat Bot Canister](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/ocBot_mk2). 
 
-## Getting Historic Quotes
-Users wishing to get more than the current quote can query the OHLC Store to get historic data including the currently forming bar. There are a number of methods you can use depending on what data you are needing. Historic Prices are given as the cross price (eg CKBTC/ICP) and USD price (eg CKBTC/USD). 
+The alert canister is governed by a timer which initiates a call to the defi oracle to fetch the latest ICP token prices. The canister then checks these against user alerts (set by the 221Bravo Frontend). If any alerts are 'triggered' the alert canister calls the Open Chat Bot canister which then sends an alert message to the user's open chat account. 
 
-You can get the available token crosses by querying ‘get_all_crosses’ 
+The alert canister utilises stable memory to store the user/ price alert data. 
 
-```bash
-dfx canister call YOUR_OHLC_CANISTER_ID --network ic  get_all_crosses
+### Alert Struct
+The InputAlert struct is used when sending and receiving data from the alert canister. 
+
+```rust
+pub struct InputAlert{
+    pub id: u64, 
+    pub user: String, 
+    pub cross: String, 
+    pub oc_id: String,
+    pub price: f64,
+    pub direction: u8 
+}
 ```
 
-For all price data for a certain token cross (example below is for CHAT/ICP)
+When setting a price alert (via add_price_alert method) the following information must be supplied 
+- user: This holds the hashed account relating to a specific 221Bravo User. 
+- cross: The token cross as text eg 'CKBTC/ICP'
+- oc_id: This is the Open Chat principal which will be messaged when the alert is triggered
+- price: the price level at which the alert will trigger
+- direction: 0 = down (crossed below price level) 1 = up (crossed above price level)
 
+Note - id field is set by the canister based on the next available alert id. Input value can be set as 0 or any other valid u64.  
+
+The add_price_alert method will return the alert ID associated with the input alert. 
+
+### Canister Setup
+The OC Bot canister (const OC_ALERT_BOT) can be set in constants.rs file in the core module.
+
+1. Deploy the canister
 ```bash
-dfx canister call YOUR_OHLC_CANISTER_ID --network ic get_all_data '("CHAT/ICP")' 
+dfx deploy price_alerts --network ic --argument $(dfx identity get-principal) 
 ```
 
-You can get specific timeframes by calling one of the following methods 
-* get_m5_data
-* get_m15_data
-* get_h1_data
-* get_d1_data
-* get_w1_data
-
-Each of these methods takes two arguments. The first being the token cross as text and the second the maximum number of bars to fetch.
-
+2. Set the price oracle canister
 ```bash
-dfx canister call YOUR_OHLC_CANISTER_ID --network ic get_m5_data '("CHAT/ICP", 50 :nat64)' 
-```
-### Adding new crosses
-Once you have setup a new cross on your defi oracle [See Here](https://github.com/SaorsaLabs/221BravoApp_v3/tree/main/src/defiOracle_mk2/oracle_cpc_mk2) you can then add that cross to the OHLC Canister. NOTE - Any new cross will start from 00:00 UTC to ensure that bars align with other crosses. For example - if you add the token at 18:00 UTC the OHLC canister will not save any fetched quotes for the first six hours (until 00:00 UTC)  
-
-```bash
-# EG adding CHAT/ICP to the OHLC Store. Note - this cross should match the cross on the Oracle CPC exactly
-
-dfx canister call YOUR_OHLC_CANISTER_ID --network ic add_cross '("CHAT/ICP")' 
-
-# Removing the cross from the OHLC Store. WARNING - This will wipe all data for the cross! 
-
-dfx canister call YOUR_OHLC_CANISTER_ID --network ic remove_cross '("CHAT/ICP")' 
+dfx canister call price_alerts --network ic update_oracle_id '("YOUR_PRICE_ORACLE_CANISTER_ID")'
 ```
 
-### Timers
-The OHLC Canister designed to automatically fetch prices every X number of seconds. We would recommend  that this is set to 60 seconds as it balances the requirement for accurate data with the cost of update call to fetch the data. The timer APIs can be called as follows:
-
+3. Start the processing timer (checks for new prices)
 ```bash
-# start the timer with an interval of 60 seconds
+# Set timer to trigger every 300 seconds (5 minutes)
 
-dfx canister call ${oracleCanister} --network start_quotes_timer '(60: nat64, "CANISTER_ID_OF_YOUR_CPC_CANISTER")'
-
-# stop the timer 
-
-dfx canister call ${oracleCanister} --network stop_all_timers
+dfx canister call price_alerts --network ic start_alert_timer '(300: nat64)'
 ```

@@ -6,11 +6,11 @@ In order to store this information, the Super Index Canister works alongside the
 
 ## Deploy/ Setup
 
-The first step is to deploy a blank index canister and blank TX store. Both canisters can be deployed in the usual way, however they require an argument giving the initial admin principal. This principle will initially be the only person who can call the canister methods. Replace 2vxsx-fae with your desired principal in the code below: 
+The first step is to deploy a blank index canister and blank TX store. Both canisters can be deployed in the usual way, however they require an argument giving the initial admin principal. This principle will initially be the only person who can call the canister methods. Replace $(dfx identity get-principal) with a specific principal if required - eg '("2vxsx-fae")'
 
 ```bash
-dfx deploy super_indexer_v3 --network ic --argument ‘(“2vxsx-fae”)’ 
-dfx deploy tx_store_v3 --network ic --argument ‘(“2vxsx-fae”)’
+dfx deploy super_indexer_v3 --network ic --argument $(dfx identity get-principal) 
+dfx deploy tx_store_v3 --network ic --argument $(dfx identity get-principal) 
 ```
 
 Once the canisters are deployed, the next step is to initialise the super indexer canister setting the target ledger principal, transaction store principal and target ledger type. There are currently 3 types of supported version of the ICRC ledger: 
