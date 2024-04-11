@@ -1,4 +1,4 @@
-![Banner](Banner1.jpg)
+![Banner](Banner1.png)
 
 # 221BravoApp V3
 [221Bravo](https://221bravo.app) is a blockchain explorer primarily focused on the Internet Computer Ecosystem giving users the ability to navigate complex data in a simple and understandable way. 
