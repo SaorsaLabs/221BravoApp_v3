@@ -1,5 +1,5 @@
 # 221Bravo Canister Factory
-The canister factory supports the automation of canister creation by allowing a user to upload a number of canister wasms to the factory. Users can then call the canister factory to create canister(s) with a specified wasm.
+The canister factory supports the automation of canister creation by allowing a user to upload a number of canister wasms and then create canister(s) with these wasms installed.
 
 The 221Bravo App currently uses the canister factory to simplify the process of creating the new index canisters required to add a token to the app. The canister factory is work-in-progress and further features will be added. 
 
