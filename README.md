@@ -1,3 +1,5 @@
+![Banner](Banner1.jpg)
+
 # 221BravoApp V3
 [221Bravo](https://221bravo.app) is a blockchain explorer primarily focused on the Internet Computer Ecosystem giving users the ability to navigate complex data in a simple and understandable way. 
 
@@ -18,5 +20,7 @@ Unlike most other blockchain explorers, 221Bravo runs entirely on the [ICP Block
 ## Architecture 
 
 ![Canister Layout](221BravoApp.jpg)
+
+## Membership
 
  
