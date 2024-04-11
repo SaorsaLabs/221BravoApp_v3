@@ -6,7 +6,7 @@
 Unlike most other blockchain explorers, 221Bravo runs entirely on the [ICP Blockchain](https://internetcomputer.org/docs/current/home) and is powered by over 100 smart contracts. 
 
 ### Features
-221Bravo App is compatable with ICP and all SNS (ICRC) tokens. 
+221Bravo App is compatible with ICP and all SNS (ICRC) tokens. 
 
 - Overview of top ICP tokens and simple account searching tool on the [homepage](https://221bravo.app)
 - Token price charts and stats (top holders, volumes, whale moves) [example](https://221bravo.app/stats/CKBTC)
@@ -20,7 +20,5 @@ Unlike most other blockchain explorers, 221Bravo runs entirely on the [ICP Block
 ## Architecture 
 
 ![Canister Layout](221BravoApp.jpg)
-
-## Membership
 
  
