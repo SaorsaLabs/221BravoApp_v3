@@ -1,0 +1,127 @@
+{
+	"canisters": {
+		"auth_backend": {
+			"candid": "src/auth_backend/auth_backend.did",
+			"package": "auth_backend",
+			"type": "rust",
+			"optimize": "cycles"
+		},
+		"super_indexer_v3": {
+			"candid": "src/super_indexer_v3/super_indexer_v3.did",
+			"package": "super_indexer_v3",
+			"type": "rust",
+			"optimize": "cycles"
+		},
+		"tx_store_v3": {
+			"candid": "src/tx_store_v3/tx_store_v3.did",
+			"package": "tx_store_v3",
+			"type": "rust",
+			"optimize": "cycles"
+		},
+		"super_stats_v3": {
+			"candid": "src/super_stats_v3/super_stats_v3.did",
+			"package": "super_stats_v3",
+			"type": "rust",
+			"optimize": "cycles"
+		},
+		"defi_oracle_cpc": {
+			"candid": "src/defiOracle/defi_oracle_cpc/defi_oracle_cpc.did",
+			"package": "defi_oracle_cpc",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"defi_oracle_mib": {
+			"candid": "src/defiOracle/defi_oracle_mib/defi_oracle_mib.did",
+			"package": "defi_oracle_mib",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"ohlc_store": {
+			"candid": "src/ohlcStore/ohlc_store.did",
+			"package": "ohlc_store",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"ohlc_store_mk2": {
+			"candid": "src/ohlcStore_mk2/ohlc_store_mk2.did",
+			"package": "ohlc_store_mk2",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"cycles_manager": {
+			"candid": "src/cycles_manager/cycles_manager.did",
+			"package": "cycles_manager",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"oc_bot": {
+			"candid": "src/ocBot/oc_bot.did",
+			"package": "oc_bot",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"oc_bot_mk2": {
+			"candid": "src/ocBot_mk2/oc_bot_mk2.did",
+			"package": "oc_bot_mk2",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"oc_bot_mk2_testing": {
+			"candid": "src/ocBot_mk2_testing/oc_bot_mk2_testing.did",
+			"package": "oc_bot_mk2_testing",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"price_alerts": {
+			"candid": "src/price_alerts/price_alerts.did",
+			"package": "price_alerts",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"tracking_canister": {
+			"candid": "src/tracking_canister/tracking_canister.did",
+			"package": "tracking_canister",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"oracle_cpc_mk2": {
+			"candid": "src/defiOracle_mk2/oracle_cpc_mk2/oracle_cpc_mk2.did",
+			"package": "oracle_cpc_mk2",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"oracle_mib_mk2": {
+			"candid": "src/defiOracle_mk2/oracle_mib_mk2/oracle_mib_mk2.did",
+			"package": "oracle_mib_mk2",
+			"type": "rust",
+			"optimize": "cycles"
+	    },
+		"canister_factory": {
+			"candid": "src/canister_factory/canister_factory.did",
+			"package": "canister_factory",
+			"type": "rust",
+			"optimize": "cycles"
+	    }
+	},
+	"defaults": {
+		"build": {
+			"args": "",
+			"packtool": ""
+		}
+	},
+	"dfx": "0.18.0",
+	"networks": {
+		"local": {
+			"bind": "127.0.0.1:8000",
+			"type": "ephemeral"
+		}
+	},
+	"declarations": {
+		"output": "src/declarations",
+		"node_compatibility": true
+	},
+	"version": 1,
+	"output_env_file": ".env"
+}
+
+
