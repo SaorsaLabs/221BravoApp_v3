@@ -1,17 +1,21 @@
 # 221BravoApp V3
-Home for Data-Detectives in the Internet Computer Ecosystem.
+[221Bravo](https://221bravo.app) is a blockchain explorer primarily focused on the Internet Computer Ecosystem giving users the ability to navigate complex data in a simple and understandable way. 
 
-## NOTE - We're still building here :)
+Unlike most other blockchain explorers, 221Bravo runs entirely on the [ICP Blockchain](https://internetcomputer.org/docs/current/home) and is powered by over 100 smart contracts. 
 
-221Bravo is a blockchain explorer primarily focused on the Internet Computer Ecosystem giving users the ability to navigate complex data in a simple and understandable way. 
-The app is broken down into several sections:
+### Features
+221Bravo App is compatable with ICP and all SNS (ICRC) tokens. 
 
--	Account and block explorer. Covering ICP and SNS (ICRC) tokens. Members get additional information on each account including linked accounts, user saved names and public known names. 
--	Token Stats covering ICP and SNS (ICRC) tokens. Top holders, daily transaction volumes, mint/ burn, whale moves and other great metrics. 
--	Visual Block Explorer allowing the user to explore the latest ICP/ ICRC transactions – quickly identifying links and relationships between accounts. 
--	Members page featuring exclusive tools and members only chat (using Open Chat)
+- Overview of top ICP tokens and simple account searching tool on the [homepage](https://221bravo.app)
+- Token price charts and stats (top holders, volumes, whale moves) [example](https://221bravo.app/stats/CKBTC)
+- Account searching via URL parameters /account/[ TICKER ]?id=[ ACCOUNT ] [example](https://221bravo.app/account/ICP?id=ab8f382fdce7c5cbc951c895f815325cdfdd9fc50116752081613715c333737b)
+- Block/ transaction explorer tool [example](https://221bravo.app/blocks/icp)
+- Block searching via URL parameters /blocks/[ TICKER ]?start=[ BLOCK NUMBER ]&end=[ BLOCK NUMBER ] [example](https://221bravo.app/blocks/cketh?start=0&end=10)
+- Named Accounts
+- Price Alerts
+- [Members chat](https://oc.app/community/vrtdr-dyaaa-aaaar-a2exq-cai/channel/283806532254715438641103320620325336219) (by OpenChat) 
 
-## Overview of Frontend/ Backend canisters 
+## Architecture 
 
 ![Canister Layout](221BravoApp.jpg)
 
