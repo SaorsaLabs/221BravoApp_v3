@@ -8,15 +8,14 @@ The Super Stats canister is one of the core canister making up the backend of th
 -	Account Overview (Search)
 -	Principal Overview (Search)
 -	Daily/ Hourly Stats (Below)
--   ... 
--	Total transaction count
--	Total transaction value
--	Total transaction average
--	Total unique accounts
--	Total unique principals
--	Count/ Value of Burn, Mint, Transfer transactions
--	Count over time (Daily/ hourly)
--	Top (size) Mint/ Burn/ Transfer transactions
+-   -> Total transaction count
+-	-> Total transaction value
+-	-> Total transaction average
+-	-> Total unique accounts
+-	-> Total unique principals
+-	-> Count/ Value of Burn, Mint, Transfer transactions
+-	-> Count over time (Daily/ hourly)
+-	-> Top (size) Mint/ Burn/ Transfer transactions
 
 
 ## Deploy/ Setup
