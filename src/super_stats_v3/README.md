@@ -50,7 +50,7 @@ dfx canister call ${superStatsCanister} --network ic init_target_ledger '( recor
 
 ```
 
-If successful you should get the response “Target canister, tx store, fee and decimals set”. This indicates that the canister was able to register with the tx store and was able to communicate with the ledger canister. 
+If successful you should get the response “Target canister, tx store, fee and decimals set”. This indicates that the canister was able to communicate with the target ledger canister. 
 At this point you may want to add further cycles to the stats canister. 
 Finally, you need to start a processing timer which will check the ledger for new transactions and process these into the index and stats. The only argument is the number of seconds the timer should wait between calls to the target ledger. 900 seconds (15 minutes) will likely suit your needs. 
 
