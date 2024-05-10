@@ -115,7 +115,7 @@ service : (text) -> {
     "init_target_ledger": (SetTargetArgs, IndexerType) -> (text);
     "init_pre_mint": (text, nat64) -> (text); // fix for some meme ICRC ledgers
     "get_top_account_holders": (nat64) -> (vec HolderBalanceResponse);
-    "get_top_principal_holders": (nat64) -> (vec HolderBalanceResponse) query;
+    "get_top_principal_holders": (nat64) -> (vec HolderBalanceResponse);
     "get_total_holders": () -> (TotalHolderResponse) query;
     "get_hourly_stats": () -> (TimeStats) query;
     "get_daily_stats": () -> (TimeStats) query;

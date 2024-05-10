@@ -124,7 +124,7 @@ pub fn get_top_account_holders(number_to_return: u64) -> Vec<HolderBalanceRespon
 }
 
 
-#[query]
+#[update]
 pub fn get_top_principal_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
     // check authorised
     RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
