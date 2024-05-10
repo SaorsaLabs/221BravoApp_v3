@@ -37,6 +37,7 @@ Your required ledger type can simply be chosen in the init argument below:
 
 
 ```bash
+tokenLedger="TARGET LEDGER ID HERE" # Principal of the target ledger 
 superIndexerCanister="YOUR CANISTER PRINCIPAL HERE"
 indexType="DfinityIcrc2"
 statsHours=24 # hourly data captures latest 24 hours.
