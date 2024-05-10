@@ -6,16 +6,13 @@ mod test_data;
 
 mod tests {
     use crate::{
-        core::{types::IDKey, stable_memory::STABLE_STATE, runtime::RUNTIME_STATE}, 
-        test_data::{test_state_init, self, ptx_test_data}, 
-        stats::{process_data::{
-            small_tx::{processedtx_to_smalltx}, 
-            process_index::process_smtx_to_index, 
-            process_time_stats::{StatsType, calculate_time_stats, top_x_by_txvalue}}, 
-            utils::{nearest_past_hour, nearest_day_start, principal_subaccount_to_string, parse_icrc_account}, 
-            fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, 
-            constants::{HOUR_AS_NANOS, DAY_AS_NANOS}, 
-            custom_types::{IndexerType, ProcessedTX}}
+        core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, types::IDKey}, 
+        stats::{api::{get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, 
+        constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, 
+        process_data::{
+            process_index::{process_smtx_to_index, process_smtx_to_principal_index}, process_time_stats::{calculate_time_stats, top_x_by_txvalue, StatsType}, 
+            small_tx::{processedtx_to_principal_only_smalltx, processedtx_to_smalltx}}, utils::{nearest_day_start, nearest_past_hour, parse_icrc_account, principal_subaccount_to_string}}, 
+            test_data::{self, ptx_test_data, test_state_init}
         };
 
     #[test]
@@ -238,12 +235,11 @@ mod tests {
 
         let test_txs = ptx_test_data();
         RUNTIME_STATE.with(|s|{
-            s.borrow_mut().data.latest_blocks.push_tx_vec(test_txs)
-        });
+            s.borrow_mut().data.latest_blocks.push_tx_vec(test_txs, time_now)
+        }); 
 
-        let res = calculate_time_stats(process_from,StatsType::Daily, IndexerType::DfinityIcp, time_now);
+        let res = calculate_time_stats(process_from,StatsType::Daily, IndexerType::DfinityIcrc2, time_now);
         
-        println!("RES :: {:?}", res);
         // totals
         assert_eq!(res.total_transaction_count, 31);
         assert_eq!(res.total_transaction_value, 1_004_132_500_001);
@@ -262,6 +258,12 @@ mod tests {
 
         assert_eq!(sum_all, 1_005_132_500_001); // 1_000_000_000 higher than total_transaction_value b/c approve is counted      
         assert_eq!(count_all, 31);
+
+        // Total Unique Accounts
+        assert_eq!(res.total_unique_accounts, 10);
+        
+        // Total Unique Principals
+        assert_eq!(res.total_unique_principals, 7);
 
         // Count over time 
         let cot = res.count_over_time.clone();
@@ -298,4 +300,51 @@ mod tests {
         assert_eq!(top[3].tx_value, 80000000);
         assert_eq!(top[4].tx_value, 30000000);
     }
+
+    // test top holders and balances
+    #[test]
+    fn test_holders_and_balances(){
+        // to run this test you need to comment out the auth checks on 
+        // get_top_account_holders, get_top_principal_holders, get_account_overview, get_principal_overview
+        // in API.rs
+
+        // init test Stable/ Runtime state
+        test_state_init();
+        
+        let ptx = ptx_test_data();
+        let stx = processedtx_to_smalltx(&ptx);
+        let index_res = process_smtx_to_index(stx);
+        let principal_tx = processedtx_to_principal_only_smalltx(&ptx);
+        let index_res_pr = process_smtx_to_principal_index(principal_tx);
+
+        // Both indexes process ok
+        assert_eq!(index_res, Ok(30_u64));
+        assert_eq!(index_res_pr, Ok(30_u64));
+
+        let top = get_top_account_holders(5);
+        let top_pr = get_top_principal_holders(5);
+        // Top Account
+        assert_eq!(top[0].holder, "yvlxg-m3yuk-i2q7x-nqcms-mpyox-fgyj3-molor-v3ley-4kckn-ptfbf-4qe.0000000000000000000000000000000000000000000000000000000000000000".to_string());
+        assert_eq!(top[0].data.received, (3, 100600000000));
+        assert_eq!(top[0].data.sent, (1, 10010000) );
+        assert_eq!(top[0].data.balance, 100589990000);
+
+        // Top Principal
+        assert_eq!(top_pr[0].holder, "okuxs-wiaaa-aaaak-qidcq-cai".to_string());
+        assert_eq!(top_pr[0].data.received, (8, 301102090001));
+        assert_eq!(top_pr[0].data.sent, (10, 811740000) );
+        assert_eq!(top_pr[0].data.balance, 300290350001);
+
+        // account overview
+        let ac_ov = get_account_overview("yvlxg-m3yuk-i2q7x-nqcms-mpyox-fgyj3-molor-v3ley-4kckn-ptfbf-4qe.0000000000000000000000000000000000000000000000000000000000000000".to_string());
+        let ac_ov2 = ac_ov.unwrap();
+        assert_eq!(ac_ov2.balance, 100589990000);
+
+        let pr_ov = get_principal_overview("okuxs-wiaaa-aaaak-qidcq-cai".to_string());
+        let pr_ov2 = pr_ov.unwrap();
+        assert_eq!(pr_ov2.balance, 300290350001);
+
+    }
+
+
 }

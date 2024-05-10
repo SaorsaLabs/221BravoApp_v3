@@ -2,12 +2,11 @@ use std::time::Duration;
 use ic_cdk::api::time;
 
 use crate::{
-    core::{utils::{critical_err, canister_call, log}, runtime::RUNTIME_STATE, working_stats::count_error}, 
+    core::{runtime::RUNTIME_STATE, utils::{canister_call, critical_err, log}, working_stats::count_error}, 
     stats::{custom_types::{IndexerType, ProcessedTX}, 
-    fetch_data::{dfinity_icp::t1_download_transactions, dfinity_icrc2::t2_download_transactions}, 
+    fetch_data::{dfinity_icp::t1_download_transactions, dfinity_icrc2::t2_download_transactions, meme_icrc::t3_download_transactions}, 
     process_data::{
-        small_tx::{processedtx_to_smalltx, processedtx_to_principal_only_smalltx}, process_index::{process_smtx_to_index, process_smtx_to_principal_index}, 
-        process_time_stats::{StatsType, calculate_time_stats}
+        process_index::{process_smtx_to_index, process_smtx_to_principal_index}, process_time_stats::{calculate_time_stats, StatsType}, small_tx::{processedtx_to_principal_only_smalltx, processedtx_to_smalltx}
         }
     }
 };
@@ -51,7 +50,10 @@ pub async fn schedule_data_processing(){
             // Download txs from Dfinity ICRC 2 type ledger
             latest_transactions = t2_download_transactions().await;
         },
-        IndexerType::DfinityIcrc3 => todo!(),
+        IndexerType::MemeIcrc => {
+            // Download txs from Meme ICRC type ledger
+            latest_transactions = t3_download_transactions().await;
+        },
     }
 
     // PROCESS LATEST TRANSACTIONS
@@ -99,8 +101,9 @@ pub async fn schedule_data_processing(){
             match index_res  {
                 Ok(processed_tip) => {
                     // store ptx txs in blockstore
+                    let time_now = ic_cdk::api::time();
                     RUNTIME_STATE.with(|s|{
-                        s.borrow_mut().data.latest_blocks.push_tx_vec(txs)
+                        s.borrow_mut().data.latest_blocks.push_tx_vec(txs, time_now)
                     });
 
                     // clear temp vecs

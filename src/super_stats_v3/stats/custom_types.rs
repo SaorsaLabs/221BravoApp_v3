@@ -10,7 +10,7 @@ pub enum IndexerType{
     #[default]
     DfinityIcp,
     DfinityIcrc2,
-    DfinityIcrc3
+    MemeIcrc
 }
 
 #[derive(CandidType, Deserialize, Serialize, Clone, Default, Debug, PartialEq, Eq)]
@@ -115,8 +115,7 @@ impl BlockHolder {
         return vec
     }
 
-    pub fn push_tx_vec(&mut self, tx_vec:Vec<ProcessedTX>){
-        let time_now = ic_cdk::api::time();
+    pub fn push_tx_vec(&mut self, tx_vec:Vec<ProcessedTX>, time_now: u64){
         let day_start_time = time_now.saturating_sub(self.days_nano);
         let hour_start_time = time_now.saturating_sub(self.hours_nano);
         

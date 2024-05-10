@@ -2,9 +2,8 @@ use candid::{CandidType, Nat};
 use serde::{Serialize, Deserialize};
 
 use crate::{
-    core::{runtime::RUNTIME_STATE, utils::{canister_call, nat_to_u128, log, nat_to_u64}}, 
-    stats::{custom_types::{ProcessedTX, TransactionType},
-    constants::{MAX_TRANSACTION_BATCH_SIZE, MAX_TOTAL_DOWNLOAD, HOUR_AS_NANOS, DAY_AS_NANOS}}};
+    core::{runtime::RUNTIME_STATE, utils::{canister_call, critical_err, log, nat_to_u128, nat_to_u64}, working_stats::count_error}, 
+    stats::{constants::{DAY_AS_NANOS, HOUR_AS_NANOS, MAX_TOTAL_DOWNLOAD, MAX_TRANSACTION_BATCH_SIZE}, custom_types::{ProcessedTX, TransactionType}, process_data::{process_index::{process_smtx_to_index, process_smtx_to_principal_index}, small_tx::{processedtx_to_principal_only_smalltx, processedtx_to_smalltx}}}};
 
 use super::{
     dfinity_icrc2_types::{
@@ -19,7 +18,7 @@ use super::{
 // }
 
 //Set target canister, tx store, fee and decimals to runtime memory
-pub async fn t2_impl_set_target_canister(args: SetTargetArgs) -> Result<String, String> {
+pub async fn t3_impl_set_target_canister(args: SetTargetArgs) -> Result<String, String> {
   let check = RUNTIME_STATE.with(|s|{s.borrow().data.target_ledger_locked});
   let mut had_error = false;
   let mut errors: Vec<String> = Vec::new();
@@ -89,7 +88,7 @@ pub async fn t2_impl_set_target_canister(args: SetTargetArgs) -> Result<String, 
     }
 }
 
-pub async fn t2_download_transactions() -> Result<Vec<ProcessedTX>, String> {
+pub async fn t3_download_transactions() -> Result<Vec<ProcessedTX>, String> {
     // check init done
     RUNTIME_STATE.with(|s|{
         let check = s.borrow().data.target_ledger_locked;
@@ -103,7 +102,7 @@ pub async fn t2_download_transactions() -> Result<Vec<ProcessedTX>, String> {
     });
     // get tip of chain
     let chain_tip: u64;
-    let tip_call = get_tip_of_chain_t2(ledger_canister.as_str()).await;
+    let tip_call = get_tip_of_chain_t3(ledger_canister.as_str()).await;
     match tip_call {
         Ok(tip) => { 
             match nat_to_u64(tip) {
@@ -149,16 +148,12 @@ pub async fn t2_download_transactions() -> Result<Vec<ProcessedTX>, String> {
     }
 }
 
-async fn get_tip_of_chain_t2(ledger_id: &str) -> Result<Nat, String> {
-    let req = GetBlocksArgs1 {
-        start: Nat::from(0_u64),
-        length: Nat::from(1_u64),
-    };
-    let result: Result<(GetTransactionsResponse,), (ic_cdk::api::call::RejectionCode, String)> 
-    = canister_call(ledger_id, "get_transactions", req).await;
+async fn get_tip_of_chain_t3(ledger_id: &str) -> Result<Nat, String> {
+    let result: Result<(Nat,), (ic_cdk::api::call::RejectionCode, String)> 
+    = canister_call(ledger_id, "get_total_tx", ()).await;
     match result {
         Ok(value) => {
-            Ok(value.0.log_length)
+            Ok(value.0)
         },
         Err(e) => {
             let error = format!("Tip of Chain Error - {:?}. {}", e.0, e.1);
@@ -173,7 +168,7 @@ async fn download_manager(tip: u64, next_block: u64, ledger: &str) -> Result<Vec
     let chunks_needed = (
         (blocks_needed as f64) / (MAX_TRANSACTION_BATCH_SIZE as f64)
         ).ceil() as u32;
-    log("[][] ----- Starting ICRC-2 Download ----- [][]");
+        log("[][] ----- Starting Meme ICRC Download ----- [][]");
     log(format!(
             "Blocks Needed: {}, Chunks Needed: {}, Tip: {}, Next-Block: {}",
             blocks_needed,
@@ -201,7 +196,7 @@ async fn download_manager(tip: u64, next_block: u64, ledger: &str) -> Result<Vec
         length = if remaining > MAX_TRANSACTION_BATCH_SIZE as u64 { MAX_TRANSACTION_BATCH_SIZE as u64 } 
             else { remaining };
         // Get next chunk of transactions
-        let txns:Result<Vec<ProcessedTX>, String>  = icrc2_download_chunk(start, length, ledger).await;
+        let txns:Result<Vec<ProcessedTX>, String>  = meme_download_chunk(start, length, ledger).await;
         // add to temp vec
         let txns_len;
         match txns {
@@ -221,7 +216,7 @@ async fn download_manager(tip: u64, next_block: u64, ledger: &str) -> Result<Vec
     return Ok(temp_tx_array);
 }
 
-async fn icrc2_download_chunk(start: u64, length: u64, ledger_id: &str) -> Result<Vec<ProcessedTX>, String> {
+async fn meme_download_chunk(start: u64, length: u64, ledger_id: &str) -> Result<Vec<ProcessedTX>, String> {
     let req = GetBlocksArgs1 {
         start: Nat::from(start),
         length: Nat::from(length),
@@ -237,7 +232,7 @@ async fn icrc2_download_chunk(start: u64, length: u64, ledger_id: &str) -> Resul
                     let mut all_txs: Vec<ProcessedTX> = Vec::new();
                     // loop over archives
                     for archived in value.0.archived_transactions {
-                        let arve_txs = get_transactions_from_archive_t2(&archived).await; // **** 
+                        let arve_txs = get_transactions_from_archive_t3(&archived).await; // **** 
                         match arve_txs {
                             Ok(mut value) => {
                                 all_txs.append(&mut value);
@@ -261,7 +256,7 @@ async fn icrc2_download_chunk(start: u64, length: u64, ledger_id: &str) -> Resul
                     // process ledger blocks
 
                     let ledger_txs: Result<Vec<ProcessedTX>, String> = 
-                        process_ledger_block_t2(value.0.transactions, next_block); 
+                        process_ledger_block_t3(value.0.transactions, next_block); 
                     match ledger_txs {
                         Ok(mut v_txs) => {
                             // combine and return 
@@ -275,7 +270,7 @@ async fn icrc2_download_chunk(start: u64, length: u64, ledger_id: &str) -> Resul
                 (false, true) => {
                     // Ledger blocks only - no archive blocks
                     let ledger_txs: Result<Vec<ProcessedTX>, String> = 
-                        process_ledger_block_t2(value.0.transactions, start); 
+                        process_ledger_block_t3(value.0.transactions, start); 
                     match ledger_txs {
                         Ok(v_txs) => {
                             return Ok(v_txs);
@@ -288,7 +283,7 @@ async fn icrc2_download_chunk(start: u64, length: u64, ledger_id: &str) -> Resul
                     let mut all_txs: Vec<ProcessedTX> = Vec::new();
                     // loop over archives
                     for archived in value.0.archived_transactions {
-                        let arve_txs = get_transactions_from_archive_t2(&archived).await; // **** 
+                        let arve_txs = get_transactions_from_archive_t3(&archived).await; // **** 
                         match arve_txs {
                             Ok(mut value) => {
                                 all_txs.append(&mut value);
@@ -324,7 +319,7 @@ pub fn icrc_account_to_string(account: Account) -> String {
     return format!("{}.{}", pr, sa);
 }
 
-async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<Vec<ProcessedTX>, String> {
+async fn get_transactions_from_archive_t3 (archived: &ArchivedRange1) -> Result<Vec<ProcessedTX>, String> {
     let mut processed_transactions: Vec<ProcessedTX> = Vec::new();
     let req = GetBlocksArgs1 {
         start: Nat::from(archived.start.clone()),
@@ -333,7 +328,7 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
     let mut master_block;
     match nat_to_u64(archived.start.clone()){
         Ok(v_u64) => { master_block = v_u64 },
-        Err(e) => {return Err(format!("Can't convert archive.start into u64 value (get_transactions_from_archive_t2) : {}", e))}
+        Err(e) => {return Err(format!("Can't convert archive.start into u64 value (get_transactions_from_archive_t3) : {}", e))}
     }
     let ledger_id = archived.callback.0.principal.to_text();
     let method = &archived.callback.0.method;
@@ -368,13 +363,12 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
                 // BURN TX
                 if let Some(burn) = tx.burn {
                     let fm_ac = icrc_account_to_string(burn.from);
-                    let spend = if let Some(v) = burn.spender { 
-                        Some(icrc_account_to_string(v)) 
-                    } else { None };
                     let val;
                     match nat_to_u128(burn.amount){
                         Ok(v_u128) => { val = v_u128 },
-                        Err(e) => {return Err(format!("Can't process archive tx value to u128 (2) : {}", e))}
+                        Err(e) => {
+                            return Err(format!("Can't process archive tx value to u128 (2) : {}", e))
+                        }
                     }
                     processed_transactions.push( ProcessedTX{
                         block: master_block.clone(),
@@ -385,7 +379,7 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
                         tx_value: val,
                         tx_fee: None,
                         tx_time: tx.timestamp,
-                        spender: spend
+                        spender: None// not used in this ICRC version. 
                     });
                     master_block = master_block.saturating_add(1_u64);
                 }
@@ -394,9 +388,6 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
                 if let Some(transfer) = tx.transfer {
                     let to_ac = icrc_account_to_string(transfer.to);    
                     let fm_ac = icrc_account_to_string(transfer.from);  
-                    let spend = if let Some(v) = transfer.spender { 
-                        Some(icrc_account_to_string(v)) 
-                    } else { None };
                     let fee = if let Some(f) = transfer.fee {
                         match nat_to_u128(f) {
                             Ok(f_u128) => {
@@ -421,48 +412,13 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
                         tx_value: val,
                         tx_fee: fee,
                         tx_time: tx.timestamp,
-                        spender: spend
+                        spender: None // not used in this ICRC version
                     });
                     master_block = master_block.saturating_add(1_u64);
                 }
 
-                // APPROVE TX
-                if let Some(approve) = tx.approve {   
-                    let fm_ac = icrc_account_to_string(approve.from);  
-                    let spend = icrc_account_to_string(approve.spender);
-                    let fee = if let Some(f) = approve.fee {
-                        match nat_to_u128(f) {
-                            Ok(f_u128) => {
-                                Some(f_u128) 
-                            },
-                            Err(e) => {
-                                return Err(format!("Can't process transaction fee to u128 : {}", e))
-                            }
-                        } 
-                    } else { None };
-                    let val;
-                    match nat_to_u128(approve.amount){
-                        Ok(v_u128) => { val = v_u128 },
-                        Err(_e) => {
-                            val = u128::MAX;
-                            // fix eth issue. accurate Val isn't mission critical for approve txs.
-                            //return Err(format!("Can't process archive tx value to u128 (4) : {}", e))
-                        }
-                    }
+                 // APPROVE TX - not used in this ICRC Version.
 
-                    processed_transactions.push( ProcessedTX{
-                        block: master_block.clone(),
-                        hash: String::from("no-hash"),
-                        tx_type: TransactionType::Approve.to_string(),
-                        from_account: fm_ac,
-                        to_account: spend.clone(),
-                        tx_value: val,
-                        tx_fee: fee,
-                        tx_time: tx.timestamp,
-                        spender: Some(spend)
-                    });
-                    master_block = master_block.saturating_add(1_u64);
-                }
             }// for loop
         },
         Err(e) => {
@@ -473,7 +429,7 @@ async fn get_transactions_from_archive_t2 (archived: &ArchivedRange1) -> Result<
     return Ok(processed_transactions);
 }
 
-fn process_ledger_block_t2(txs: Vec<Transaction>, next_block_number: u64) -> Result<Vec<ProcessedTX>, String> {
+fn process_ledger_block_t3(txs: Vec<Transaction>, next_block_number: u64) -> Result<Vec<ProcessedTX>, String> {
     let mut master_block = next_block_number;
     let mut processed_transactions: Vec<ProcessedTX> = Vec::new();
 
@@ -501,11 +457,8 @@ fn process_ledger_block_t2(txs: Vec<Transaction>, next_block_number: u64) -> Res
         }
 
         // BURN TX
-        if let Some(burn) = tx.burn {
+         if let Some(burn) = tx.burn {
             let fm_ac = icrc_account_to_string(burn.from);
-            let spend = if let Some(v) = burn.spender { 
-                Some(icrc_account_to_string(v)) 
-            } else { None };
             let val;
             match nat_to_u128(burn.amount){
                 Ok(v_u128) => { val = v_u128 },
@@ -520,7 +473,7 @@ fn process_ledger_block_t2(txs: Vec<Transaction>, next_block_number: u64) -> Res
                 tx_value: val,
                 tx_fee: None,
                 tx_time: tx.timestamp,
-                spender: spend
+                spender: None // not used
             });
             master_block = master_block.saturating_add(1_u64);
         }
@@ -529,9 +482,6 @@ fn process_ledger_block_t2(txs: Vec<Transaction>, next_block_number: u64) -> Res
         if let Some(transfer) = tx.transfer {
             let to_ac = icrc_account_to_string(transfer.to);    
             let fm_ac = icrc_account_to_string(transfer.from);  
-            let spend = if let Some(v) = transfer.spender { 
-                Some(icrc_account_to_string(v)) 
-            } else { None };
             let fee = if let Some(f) = transfer.fee {
                 match nat_to_u128(f) {
                     Ok(f_u128) => {
@@ -556,47 +506,72 @@ fn process_ledger_block_t2(txs: Vec<Transaction>, next_block_number: u64) -> Res
                 tx_value: val,
                 tx_fee: fee,
                 tx_time: tx.timestamp,
-                spender: spend
+                spender: None // not used
             });
             master_block = master_block.saturating_add(1_u64);
         }
 
-        // APPROVE TX
-        if let Some(approve) = tx.approve {   
-            let fm_ac = icrc_account_to_string(approve.from);  
-            let spend = icrc_account_to_string(approve.spender);
-            let fee = if let Some(f) = approve.fee {
-                match nat_to_u128(f) {
-                    Ok(f_u128) => {
-                        Some(f_u128) 
-                    },
-                    Err(e) => {
-                        return Err(format!("Can't process transaction fee to u128 : {}", e))
-                    }
-                } 
-            } else { None };
-            let val;
-            match nat_to_u128(approve.amount){
-                Ok(v_u128) => { val = v_u128 },
-                Err(e) => {
-                    val = u128::MAX;
-                    //return Err(format!("Can't process archive tx value to u128 (4) : {}", e)) -- eth issue not mission critical for approve txs.
-                }
-            }
+        // APPROVE TX -- Not used 
 
-            processed_transactions.push( ProcessedTX{
-                block: master_block.clone(),
-                hash: String::from("no-hash"),
-                tx_type: TransactionType::Approve.to_string(),
-                from_account: fm_ac,
-                to_account: spend.clone(),
-                tx_value: val,
-                tx_fee: fee,
-                tx_time: tx.timestamp,
-                spender: Some(spend)
-            });
-            master_block = master_block.saturating_add(1_u64);
-        }
     }// for loop
     return Ok(processed_transactions);
+}
+
+
+// Manually add mint transaction - fix for EXE canister pre-mint
+// note to account is ICRC format principal.subaccount
+pub async fn add_pre_mint_to_ledger(to_account: String, tx_value: u128) -> String {
+    let mut txs:Vec<ProcessedTX> =Vec::new();
+    txs.push(ProcessedTX{
+        block: 0,
+        hash: "no-hash".to_string(),
+        tx_type: TransactionType::Mint.to_string(),
+        from_account: String::from("Token Ledger"),
+        to_account: to_account,
+        tx_value: tx_value,
+        tx_fee: None,
+        spender: None,
+        tx_time: 0u64,
+    });
+
+    // process ptx to stx
+    let latest_as_smalltx = processedtx_to_smalltx(&txs);
+    // process account index
+    let index_res = process_smtx_to_index(latest_as_smalltx);
+
+    // process ptx to stx (principal only)
+    let latest_as_smalltx_principal = processedtx_to_principal_only_smalltx(&txs);
+    // process principal index
+    let index_res_pr = process_smtx_to_principal_index(latest_as_smalltx_principal);
+    match index_res_pr  {
+        Ok(_v) => {}, // do nothing
+        Err(e) => {
+            let error = format!("Error processing stx to index (Principal): {}", e);
+            count_error();
+            critical_err(error).await;
+        }
+    }
+    
+    // outcome of account index
+    match index_res  {
+        Ok(_processed_tip) => {
+            // store ptx txs in blockstore
+            let time_now = ic_cdk::api::time();
+            RUNTIME_STATE.with(|s|{
+                s.borrow_mut().data.latest_blocks.push_tx_vec(txs, time_now)
+            });
+
+            // clear temp vecs
+            RUNTIME_STATE.with(|s|{
+                s.borrow_mut().data.temp_small_tx = Vec::new();
+            });
+            return String::from("Pre-mint transaction added");  
+        },
+        Err(e) => {
+            let error = format!("Error processing stx to index: {}", e);
+            count_error();
+            critical_err(error.clone()).await;
+            return error;
+        }
+    }
 }

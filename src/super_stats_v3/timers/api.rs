@@ -6,6 +6,21 @@ use crate::{core::{runtime::RUNTIME_STATE, utils::log},
 stats::{fetch_data::dfinity_icp::SetTargetArgs, custom_types::IndexerType, api::init_target_ledger}};
 use super::{timers::{process_self_call, process_self_call2, start_processing_time_impl, schedule_data_processing}, state::TIMER_STATE};
 
+// #[update]
+// async fn test_init() -> String {
+//     let args = SetTargetArgs{ 
+//         target_ledger: "ryjl3-tyaaa-aaaaa-aaaba-cai".to_string(), 
+//         tx_store: "qzgyj-6iaaa-aaaak-qcqza-cai".to_string() 
+//     };
+//     let route = IndexerType::DfinityIcp;
+//     init_target_ledger(args, route).await
+// }
+
+#[update]
+async fn test_run(){
+    schedule_data_processing().await;
+}
+
 // [][] -- TIMER METHODS -- [][]
 #[update]
 fn stop_all_timers() -> String {

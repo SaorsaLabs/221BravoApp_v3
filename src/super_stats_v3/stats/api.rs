@@ -5,11 +5,10 @@ use ic_cdk_macros::{update, query};
 use crate::core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, working_stats::api_count, utils::log};
 
 use super::{
-    fetch_data::{
-        dfinity_icp::{SetTargetArgs, t1_impl_set_target_canister}, 
-        dfinity_icrc2::t2_impl_set_target_canister
-    }, 
-    custom_types::{IndexerType, HolderBalance, HolderBalanceResponse, TotalHolderResponse, TimeStats, ProcessedTX}, account_tree::Overview, directory::lookup_directory, constants::HOUR_AS_NANOS, process_data::process_time_stats::{StatsType, calculate_time_stats}
+    account_tree::Overview, constants::HOUR_AS_NANOS, custom_types::{HolderBalance, HolderBalanceResponse, IndexerType, ProcessedTX, TimeStats, TotalHolderResponse}, directory::lookup_directory, fetch_data::{
+        dfinity_icp::{t1_impl_set_target_canister, SetTargetArgs}, 
+        dfinity_icrc2::t2_impl_set_target_canister, meme_icrc::{add_pre_mint_to_ledger, t3_impl_set_target_canister}
+    }, process_data::process_time_stats::{calculate_time_stats, StatsType}
 };
 
 // [][] -- ADMIN GATED -- [][]
@@ -39,10 +38,32 @@ pub async fn init_target_ledger(args: SetTargetArgs, index_type: IndexerType) ->
                 Err(e) => { return e}
             }
         },
-        IndexerType::DfinityIcrc3 => {
-            return String::from("Route not yet created");
+        IndexerType::MemeIcrc => {
+            let res = t3_impl_set_target_canister(args).await;
+            match res {
+                Ok(v) => { 
+                    RUNTIME_STATE.with(|s|{s.borrow_mut().data.set_index_type(index_type)}); 
+                    return v;
+                },
+                Err(e) => { return e}
+            }
         }
     }
+}
+
+//[][] -- ADMIN GATED - TESTS/ FIXES -- [][]
+#[update]
+fn fix_exe_missing_blocks_issue(next_block: u64){
+    // check admin
+    RUNTIME_STATE.with(|s|{s.borrow().data.check_admin(ic_cdk::caller().to_text())});
+    RUNTIME_STATE.with(|s|{s.borrow_mut().stats.set_next_block(next_block)});
+}
+
+#[update] // fix for meme pre-mint issue
+async fn init_pre_mint(to_account: String, tx_value: u64) -> String {
+    // check admin
+    RUNTIME_STATE.with(|s|{s.borrow().data.check_admin(ic_cdk::caller().to_text())});
+    add_pre_mint_to_ledger(to_account, tx_value as u128).await
 }
 
 // [][] -- AUTH GATED -- [][]
@@ -53,8 +74,8 @@ pub async fn init_target_ledger(args: SetTargetArgs, index_type: IndexerType) ->
 // get hourly stats ☑️
 // get daily stats ☑️
 
-#[query]
-fn get_top_account_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
+#[update]
+pub fn get_top_account_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
     // check authorised
     RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
 
@@ -104,7 +125,7 @@ fn get_top_account_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
 
 
 #[query]
-fn get_top_principal_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
+pub fn get_top_principal_holders(number_to_return: u64) -> Vec<HolderBalanceResponse>{
     // check authorised
     RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
 
@@ -194,7 +215,7 @@ fn get_daily_stats() -> TimeStats {
 }
 
 #[query]
-fn get_account_overview(account: String) -> Option<Overview> {
+pub fn get_account_overview(account: String) -> Option<Overview> {
     // check authorised
     RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
     api_count();
@@ -222,7 +243,7 @@ fn get_account_overview(account: String) -> Option<Overview> {
 
 
 #[query]
-fn get_principal_overview(account: String) -> Option<Overview> {
+pub fn get_principal_overview(account: String) -> Option<Overview> {
     // check authorised
     RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
     api_count();

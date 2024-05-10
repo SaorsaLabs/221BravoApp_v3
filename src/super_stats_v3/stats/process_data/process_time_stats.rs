@@ -2,7 +2,7 @@ use std::collections::VecDeque;
 
 use crate::{stats::{custom_types::{ProcessedTX, IndexerType, TimeChunkStats, TimeStats, TotCntAvg}, utils::{parse_icrc_account, nearest_past_hour, nearest_day_start}, constants::{HOUR_AS_NANOS, DAY_AS_NANOS}}, core::{runtime::RUNTIME_STATE, utils::log}};
 
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum StatsType {
     Hourly,
     Daily,
@@ -58,18 +58,33 @@ pub fn calculate_time_stats(
                     let fm_parse = parse_icrc_account(&tx.from_account);
                     if let Some(v) = fm_parse {
                         all_principals.push(v.0);
-                        all_accounts.push(v.1);
+                        all_accounts.push(tx.from_account.clone());
                     }
                 }
                 if tx.to_account != "Token Ledger" {
                     let to_parse = parse_icrc_account(&tx.to_account);
                     if let Some(v) = to_parse {
                         all_principals.push(v.0);
-                        all_accounts.push(v.1);
+                        all_accounts.push(tx.to_account.clone());
                     }
                 }
             },
-            IndexerType::DfinityIcrc3 => {} // TO-DO!
+            IndexerType::MemeIcrc => {
+                if tx.from_account != "Token Ledger" {
+                    let fm_parse = parse_icrc_account(&tx.from_account);
+                    if let Some(v) = fm_parse {
+                        all_principals.push(v.0);
+                        all_accounts.push(tx.from_account.clone());
+                    }
+                }
+                if tx.to_account != "Token Ledger" {
+                    let to_parse = parse_icrc_account(&tx.to_account);
+                    if let Some(v) = to_parse {
+                        all_principals.push(v.0);
+                        all_accounts.push(tx.to_account.clone());
+                    }
+                }
+            }
            }// match
 
            // COUNT MINT
@@ -177,7 +192,6 @@ fn calculate_time_chunk_stats(
     mode: StatsType, 
     txs: &VecDeque<ProcessedTX>
 ) -> Vec<TimeChunkStats> {
-
     // return early if empty
     if txs.len() == 0 {
         let def = TimeChunkStats::default();
@@ -237,8 +251,11 @@ fn calculate_time_chunk_stats(
         transfer_count_chunk = 0;
         approve_count_chunk = 0;
 
+
         for tx in txs {
+    
             if tx.tx_time >= start_chunk && tx.tx_time < end_chunk {
+  
                 tx_count_chunk = tx_count_chunk.saturating_add(1);
                 if tx.tx_type == "Mint" {
                     mint_count_chunk = mint_count_chunk.saturating_add(1);
