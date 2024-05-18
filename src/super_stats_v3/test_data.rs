@@ -120,7 +120,7 @@ pub fn ptx_test_data() -> Vec<ProcessedTX> {
             from_account: "Token Ledger".to_string(),
             to_account: "okuxs-wiaaa-aaaak-qidcq-cai.0000000000000000000000000000000000000000000000000000000000000000".to_string(),
             tx_value: 100_000_000_000,
-            tx_time: 1_687_939_200_000_000_000,
+            tx_time: 1_687_939_200_000_000_000, // 1687939200000000000
             tx_fee: None,
             spender: None,
         }
@@ -134,7 +134,7 @@ pub fn ptx_test_data() -> Vec<ProcessedTX> {
             from_account: "Token Ledger".to_string(),
             to_account: "okuxs-wiaaa-aaaak-qidcq-cai.0000000000000000000000000000000000000000000000000000000000000001".to_string(),
             tx_value: 100_000_000_000,
-            tx_time: 1_687_939_750_000_000_000,
+            tx_time: 1_687_939_750_000_000_000, // 1687939750000000000
             tx_fee: None,
             spender: None,
         }
@@ -503,6 +503,7 @@ pub fn ptx_test_data() -> Vec<ProcessedTX> {
             spender: None,
         }
     );
+    // End activity snapshot 0
 
     txs.push(
         ProcessedTX {
@@ -526,7 +527,7 @@ pub fn ptx_test_data() -> Vec<ProcessedTX> {
             from_account: "Token Ledger".to_string(),
             to_account: "okuxs-wiaaa-aaaak-qidcq-cai.0000000000000000000000000000000000000000000000000000000000000000".to_string(),
             tx_value: 1_000_000_000,
-            tx_time: 1_688_888_888_888_888_888,
+            tx_time: 1_688_888_888_888_888_888, // 1688888888888888888
             tx_fee: None,
             spender: None,
         }

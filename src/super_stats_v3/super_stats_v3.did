@@ -96,6 +96,13 @@ type TimeStats = record {
     top_transfers: vec ProcessedTX;
 };
 
+type ActivitySnapshot = record {
+    start_time: nat64;
+    end_time: nat64;
+    total_unique_accounts: nat64;
+    active_during_snapshot: nat64;
+};
+
 service : (text) -> {
     // CORE API
     "add_authorised": (text) -> (text);
@@ -111,7 +118,7 @@ service : (text) -> {
     "deposit_cycles": () -> (); 
     "get_canister_version": () -> (text) query;
 
-    // INDEXER API
+    // STATS API
     "init_target_ledger": (SetTargetArgs, IndexerType) -> (text);
     "init_pre_mint": (text, nat64) -> (text); // fix for some meme ICRC ledgers
     "get_top_account_holders": (nat64) -> (vec HolderBalanceResponse);
@@ -121,6 +128,7 @@ service : (text) -> {
     "get_daily_stats": () -> (TimeStats) query;
     "get_account_overview": (text) -> (opt Overview) query;
     "get_principal_overview": (text) -> (opt Overview) query;
+    "get_activity_stats": (nat64) -> (vec ActivitySnapshot) query;
 
     // TIMER API
     "start_processing_timer": (nat64) -> (text); // in seconds

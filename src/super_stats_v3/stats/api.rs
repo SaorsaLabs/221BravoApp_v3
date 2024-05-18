@@ -1,11 +1,9 @@
-use std::ops::Deref;
-
 use ic_cdk_macros::{update, query};
 
 use crate::core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, working_stats::api_count, utils::log};
 
 use super::{
-    account_tree::Overview, constants::HOUR_AS_NANOS, custom_types::{HolderBalance, HolderBalanceResponse, IndexerType, ProcessedTX, TimeStats, TotalHolderResponse}, directory::lookup_directory, fetch_data::{
+    account_tree::Overview, active_accounts::ActivitySnapshot, constants::HOUR_AS_NANOS, custom_types::{HolderBalance, HolderBalanceResponse, IndexerType, ProcessedTX, TimeStats, TotalHolderResponse}, directory::lookup_directory, fetch_data::{
         dfinity_icp::{t1_impl_set_target_canister, SetTargetArgs}, 
         dfinity_icrc2::t2_impl_set_target_canister, meme_icrc::{add_pre_mint_to_ledger, t3_impl_set_target_canister}
     }, process_data::process_time_stats::{calculate_time_stats, StatsType}
@@ -241,7 +239,6 @@ pub fn get_account_overview(account: String) -> Option<Overview> {
     }  
 }
 
-
 #[query]
 pub fn get_principal_overview(account: String) -> Option<Overview> {
     // check authorised
@@ -267,4 +264,14 @@ pub fn get_principal_overview(account: String) -> Option<Overview> {
         },
         None => { return None }
     }  
+}
+
+#[query]
+pub fn get_activity_stats(days: u64) -> Vec<ActivitySnapshot> {
+    // check authorised
+    RUNTIME_STATE.with(|s|{s.borrow().data.check_authorised(ic_cdk::caller().to_text())});
+    api_count();
+    STABLE_STATE.with(|s|{
+        s.borrow().as_ref().unwrap().activity_stats.get_daily_snapshots(days as usize)
+    })
 }

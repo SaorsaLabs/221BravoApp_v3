@@ -6,7 +6,7 @@ mod test_data;
 
 mod tests {
     use crate::{
-        core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, types::IDKey}, 
+        core::{constants::D1_AS_NANOS, runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, types::IDKey}, 
         stats::{api::{get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, 
         constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, 
         process_data::{
@@ -346,5 +346,26 @@ mod tests {
 
     }
 
+    #[test]
+    fn test_activity_stats(){
+         // init test Stable/ Runtime state
+         test_state_init();
 
+         let ptx = ptx_test_data();
+         let _stx = processedtx_to_smalltx(&ptx);
+         let snapshots = STABLE_STATE.with(|s|{
+            s.borrow().as_ref().unwrap().activity_stats.get_daily_snapshots(99)
+         });
+         println!("{:?}", snapshots);
+        // First tx date - 28 June 2023
+        // last tx date - Sunday, 9 July 2023         
+        // 12 days  
+        assert_eq!(snapshots.len(), 12);
+        assert_eq!(snapshots[0].total_unique_accounts, 10);
+        assert_eq!(snapshots[0].active_during_snapshot, 10);
+        assert_eq!(snapshots[0].start_time, 1687939200000000000); // first tx time
+        assert_eq!(snapshots[0].end_time, 1687996800000000000); // next midnight
+        assert_eq!(snapshots[1].end_time - snapshots[0].end_time, D1_AS_NANOS); // window is 24 hours. 
+    }
+    
 }
