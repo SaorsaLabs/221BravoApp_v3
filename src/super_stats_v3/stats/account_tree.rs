@@ -1,3 +1,5 @@
+use std::ops::Add;
+
 use candid::{CandidType, Nat};
 use ic_stable_memory::{derive::{StableType, AsFixedSizeBytes}, collections::{SBTreeMap, SVec}};
 use num_bigint::BigUint;
@@ -11,12 +13,48 @@ use super::custom_types::{SmallTX, ProcessedTX};
 #[derive(StableType, AsFixedSizeBytes, Debug, Default)]
 pub struct AccountTree{
     pub accounts: SBTreeMap<u64, Overview>,
+    pub accounts_history: SBTreeMap<(u64, u64), HistoryData>,
     count: u64, // not used
     last_updated: u64, // not used
 }
+
 impl AccountTree {
 
+    fn update_history_balance(&mut self, account_ref: &u64, stx: &SmallTX, tx_type: TransactionType) {
+        let day_of_transaction = stx.time / (86400 * 1_000_000_000);
+        let account_history_key = (*account_ref, day_of_transaction);
+
+        let fee: u128;
+        if let Some(f) = stx.fee { fee = f } else {
+            fee = RUNTIME_STATE.with(|s|{s.borrow().data.get_ledger_fee()})
+        };
+        
+        if !self.accounts_history.contains_key(&account_history_key) && tx_type == TransactionType::In {
+            let previous_day_balance = self.accounts_history.get(&(*account_ref, day_of_transaction - 1)).map_or(0, |previous_day| previous_day.balance);
+
+            let new_balance = match tx_type {
+                TransactionType::In => previous_day_balance.saturating_add(stx.value),
+                TransactionType::Out => previous_day_balance.saturating_sub(stx.value).saturating_sub(fee)
+            };
+
+            self.accounts_history.insert(account_history_key, HistoryData {
+                balance: new_balance,
+            }).expect("Storage is full");
+            
+        }
+        else if let Some(mut ach) = self.accounts_history.get_mut(&account_history_key) {
+            ach.balance = match tx_type {
+                TransactionType::In => ach.balance.saturating_add(stx.value),
+                TransactionType::Out => ach.balance.saturating_sub(stx.value).saturating_sub(fee)
+            };
+            // Should we update further days balance here as well?
+            // Will we have a case where we process a new transaction before an old transaction? 
+        }
+    }
+
     pub fn process_transfer_to(&mut self, account_ref: &u64, stx: &SmallTX) -> Result<String, String> {
+      self.update_history_balance(account_ref, stx, TransactionType::In);
+
       if !self.accounts.contains_key(account_ref) {
          let acd = Overview { 
                   first_active: stx.time, 
@@ -41,6 +79,8 @@ impl AccountTree {
     }
 
     pub fn process_transfer_from(&mut self, account_ref: &u64, stx: &SmallTX ) -> Result<String, String> {
+        self.update_history_balance(account_ref, stx, TransactionType::Out);
+
         match self.accounts.get_mut(account_ref) {
             Some(mut ac) => {
                 let fee: u128;
@@ -59,6 +99,12 @@ impl AccountTree {
     }
 
     pub fn process_approve_from(&mut self, account_ref: &u64, stx: &SmallTX ) -> Result<String, String> {
+        let stx_zero_value = SmallTX {
+            value: 0,
+            ..*stx
+        };
+        self.update_history_balance(account_ref, &stx_zero_value, TransactionType::Out);
+
         match self.accounts.get_mut(account_ref) {
             Some(mut ac) => {
                let fee: u128;
@@ -73,6 +119,31 @@ impl AccountTree {
     }
 }
 
+#[derive(CandidType, StableType, Deserialize, Serialize, Clone, Default, AsFixedSizeBytes, Debug)]
+pub struct HistoryData {
+    pub balance: u128,
+}
+impl Add for HistoryData {
+    type Output = HistoryData;
+
+    fn add(self, other: Self) -> Self::Output {
+        HistoryData {
+            balance: self.balance + other.balance,
+        }
+    }
+}
+// TODO: Move out of here
+#[derive(CandidType, StableType, Deserialize, Serialize, Clone, Default, Debug)]
+pub struct GetAccountBalanceHistory {
+    pub account: String,
+    pub days: u64,
+    pub merge_subaccounts: bool,
+}
+#[derive(PartialEq)]
+enum TransactionType {
+    In,
+    Out
+}
 #[derive(StableType, AsFixedSizeBytes, Debug, Default)]
 pub struct AccountData {
     pub overview: Overview

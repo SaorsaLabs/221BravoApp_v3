@@ -7,12 +7,10 @@ mod test_data;
 mod tests {
     use crate::{
         core::{constants::D1_AS_NANOS, runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, types::IDKey}, 
-        stats::{api::{get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, 
-        constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, 
-        process_data::{
+        stats::{account_tree::GetAccountBalanceHistory, api::{get_account_last_days, get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, process_data::{
             process_index::{process_smtx_to_index, process_smtx_to_principal_index}, process_time_stats::{calculate_time_stats, top_x_by_txvalue, StatsType}, 
             small_tx::{processedtx_to_principal_only_smalltx, processedtx_to_smalltx}}, utils::{nearest_day_start, nearest_past_hour, parse_icrc_account, principal_subaccount_to_string}}, 
-            test_data::{self, ptx_test_data, test_state_init}
+            test_data::{self, ptx_test_data, ptx_test_data_for_history, test_state_init}
         };
 
     #[test]
@@ -366,6 +364,27 @@ mod tests {
         assert_eq!(snapshots[0].start_time, 1687939200000000000); // first tx time
         assert_eq!(snapshots[0].end_time, 1687996800000000000); // next midnight
         assert_eq!(snapshots[1].end_time - snapshots[0].end_time, D1_AS_NANOS); // window is 24 hours. 
+    }
+
+    #[test]
+    fn test_account_history() {
+        test_state_init();
+
+        let ptx = ptx_test_data_for_history();
+        let stx = processedtx_to_smalltx(&ptx);
+        let _ = process_smtx_to_index(stx);
+
+        let account_one_args = GetAccountBalanceHistory {
+            account: "220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5".to_string(),
+            days: 5,
+            merge_subaccounts: false,
+        };
+        let account_one_history = get_account_last_days(account_one_args);
+        // let msg = format!("Account one history: {account_one_history:?}");
+        // log(msg);
+        let first_day = account_one_history.first().unwrap();
+        assert_eq!(first_day.0, 1);
+        assert_eq!(first_day.1.balance, 100_000_000_000);
     }
     
 }

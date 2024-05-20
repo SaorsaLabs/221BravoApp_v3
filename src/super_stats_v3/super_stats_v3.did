@@ -103,6 +103,18 @@ type ActivitySnapshot = record {
     active_during_snapshot: nat64;
 };
 
+type GetAccountBalanceHistoryArgs = record {
+    account: text;
+    days: nat64;
+    merge_subaccounts: bool;
+};
+
+type HistoryData = record {
+    balance: nat;
+};
+
+type AccountHistory = vec record { nat64; HistoryData; };
+
 service : (text) -> {
     // CORE API
     "add_authorised": (text) -> (text);
@@ -129,6 +141,7 @@ service : (text) -> {
     "get_account_overview": (text) -> (opt Overview) query;
     "get_principal_overview": (text) -> (opt Overview) query;
     "get_activity_stats": (nat64) -> (vec ActivitySnapshot) query;
+    "get_account_history": (GetAccountBalanceHistoryArgs) -> (AccountHistory);
 
     // TIMER API
     "start_processing_timer": (nat64) -> (text); // in seconds
