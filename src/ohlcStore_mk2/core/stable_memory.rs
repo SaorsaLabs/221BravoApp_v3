@@ -1,5 +1,5 @@
 use std::cell::RefCell;
-use defi_oracle_shared::shared_types::OverviewV1;
+use oracle_shared_mk2::shared_types::OverviewV1;
 use ic_stable_memory::{collections::SVec, derive::{AsFixedSizeBytes, StableType}};
 use crate::{
     store::{btree::PriceDataTree, constants::{D1_MAX, H1_MAX, M15_MAX, M5_MAX, W1_MAX}, directory::Directory, types::{OHLCBucket, PriceData, PriceTuple, OHLC}}, 

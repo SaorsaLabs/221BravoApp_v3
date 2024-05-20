@@ -1,6 +1,6 @@
 use std::fmt::format;
 
-use defi_oracle_shared::shared_types::OverviewV1;
+use oracle_shared_mk2::shared_types::OverviewV1;
 use ic_cdk::update;
 use ic_cdk_timers::TimerId;
 use crate::core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, utils::log};

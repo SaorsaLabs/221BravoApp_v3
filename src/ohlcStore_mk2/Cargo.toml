@@ -1,4 +1,3 @@
-[package]
 name = "ohlc_store_mk2"
 version = "0.1.0"
 edition = "2021"
@@ -17,8 +16,7 @@ ic-cdk-timers = "0.6.0"
 ciborium = "0.2.1"
 ic-stable-memory = "0.4.4"
 # for processing latest_quotes
-defi_oracle_shared = { path = "../defiOracle/defi_oracle_shared" }
-
+oracle_shared_mk2 = { path = "../defiOracle_mk2/oracle_shared_mk2" }
 
 
 

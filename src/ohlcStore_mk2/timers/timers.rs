@@ -4,7 +4,7 @@ use super::{constants::PROCESSING_CHUNK_SIZE, state::TIMER_STATE};
 use std::time::Duration;
 
 use candid::CandidType;
-use defi_oracle_shared::shared_types::{OverviewV1, StableCurrency};
+use oracle_shared_mk2::shared_types::{OverviewV1, StableCurrency};
 use serde::{Deserialize, Serialize};
 use crate::core::utils::{canister_call, critical_err};
 

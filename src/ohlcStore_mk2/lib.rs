@@ -5,7 +5,7 @@ mod test_data;
 
 #[cfg(test)]
 mod tests {
-    use defi_oracle_shared::shared_types::{ExchangeSnapshot, OverviewV1};
+    use oracle_shared_mk2::shared_types::{ExchangeSnapshot, OverviewV1};
 
     use crate::{
         core::stable_memory::STABLE_STATE, 

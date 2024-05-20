@@ -189,29 +189,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fd0f2584146f6f2ef48085050886acf353beff7305ebd1ae69500e27c67f64b"
 
 [[package]]
-name = "canbench-rs"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "fe5d551419a1547b5064111df7bfa6e87818750e7f6df611067a02e63a9cbb31"
-dependencies = [
- "canbench-rs-macros",
- "candid 0.10.6",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "serde",
-]
-
-[[package]]
-name = "canbench-rs-macros"
-version = "0.1.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5acd4a41fd2e7018508f7442d7ae90957a913c6fa0e4b767e5be9a8cc5848c8"
-dependencies = [
- "proc-macro2",
- "quote",
- "syn 1.0.109",
-]
-
-[[package]]
 name = "candid"
 version = "0.8.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -470,52 +447,6 @@ name = "debug-helper"
 version = "0.3.13"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f578e8e2c440e7297e008bb5486a3a8a194775224bbc23729b0dbdfaeebf162e"
-
-[[package]]
-name = "defi_oracle_cpc"
-version = "0.1.0"
-dependencies = [
- "candid 0.10.6",
- "ciborium",
- "defi_oracle_shared",
- "futures",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-timers",
- "ic-stable-structures",
- "num-traits",
- "serde",
- "serde_bytes",
- "serde_json",
-]
-
-[[package]]
-name = "defi_oracle_mib"
-version = "0.1.0"
-dependencies = [
- "candid 0.10.6",
- "ciborium",
- "defi_oracle_shared",
- "futures",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-timers",
- "ic-stable-structures",
- "num-traits",
- "serde",
- "serde_bytes",
-]
-
-[[package]]
-name = "defi_oracle_shared"
-version = "0.1.0"
-dependencies = [
- "candid 0.10.6",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "num-bigint",
- "num-traits",
- "serde",
-]
 
 [[package]]
 name = "des"
@@ -1230,15 +1161,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "523dc4f511e55ab87b694dc30d0f820d60906ef06413f93d4d7a1385599cc149"
 
 [[package]]
-name = "modclub_canister"
-version = "0.1.0"
-source = "git+https://github.com/open-chat-labs/open-chat?rev=54fe2fdc9c8cd0e540111d1bba5070855f056ba7#54fe2fdc9c8cd0e540111d1bba5070855f056ba7"
-dependencies = [
- "candid 0.10.6",
- "serde",
-]
-
-[[package]]
 name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1309,41 +1231,6 @@ dependencies = [
  "serde",
  "types",
  "user_canister",
-]
-
-[[package]]
-name = "oc_bot_mk2_testing"
-version = "0.1.0"
-dependencies = [
- "bot_api",
- "candid 0.10.6",
- "ciborium",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-timers",
- "ic-stable-structures",
- "num-bigint",
- "num-traits",
- "serde",
- "serde_bytes",
- "types",
- "user_canister",
- "user_index_canister",
-]
-
-[[package]]
-name = "ohlc_store"
-version = "0.1.0"
-dependencies = [
- "canbench-rs",
- "candid 0.10.6",
- "ciborium",
- "defi_oracle_shared",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-timers",
- "ic-stable-structures",
- "serde",
 ]
 
 [[package]]
@@ -2018,21 +1905,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tracking_canister"
-version = "0.1.0"
-dependencies = [
- "candid 0.10.6",
- "ciborium",
- "ic-cdk 0.12.1 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-macros 0.8.4 (registry+https://github.com/rust-lang/crates.io-index)",
- "ic-cdk-timers",
- "ic-stable-structures",
- "serde",
- "serde_bytes",
- "serde_json",
-]
-
-[[package]]
 name = "tx_store_v3"
 version = "0.1.0"
 dependencies = [
@@ -2101,21 +1973,6 @@ dependencies = [
  "ic-ledger-types",
  "icrc-ledger-types",
  "proposals_bot_canister",
- "serde",
- "serde_bytes",
- "types",
-]
-
-[[package]]
-name = "user_index_canister"
-version = "0.1.0"
-source = "git+https://github.com/open-chat-labs/open-chat?rev=54fe2fdc9c8cd0e540111d1bba5070855f056ba7#54fe2fdc9c8cd0e540111d1bba5070855f056ba7"
-dependencies = [
- "candid 0.10.6",
- "candid_gen",
- "human_readable",
- "ic-ledger-types",
- "modclub_canister",
  "serde",
  "serde_bytes",
  "types",
