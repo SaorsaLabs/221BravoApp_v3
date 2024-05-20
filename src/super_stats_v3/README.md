@@ -16,6 +16,7 @@ The Super Stats canister is one of the core canister making up the backend of th
 -	-> Count/ Value of Burn, Mint, Transfer transactions
 -	-> Count over time (Daily/ hourly)
 -	-> Top (size) Mint/ Burn/ Transfer transactions
+-   -> Activity stats every 24 hours (total unique accounts/ active accounts)
 
 
 ## Deploy/ Setup
