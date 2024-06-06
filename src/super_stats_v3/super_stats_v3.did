@@ -111,8 +111,8 @@ type GetAccountBalanceHistoryArgs = record {
 
 type HistoryData = record {
     balance: nat;
-    day: nat64,
-    time_of_update: nat64
+    day: nat64;
+    time_of_update: nat64;
 };
 
 service : (text) -> {
