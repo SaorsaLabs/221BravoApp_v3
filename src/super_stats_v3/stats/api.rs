@@ -6,7 +6,7 @@ use ic_cdk::api::time as ic_time;
 use crate::core::{runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, working_stats::api_count, utils::log};
 
 use super::{
-    account_tree::{GetAccountBalanceHistory, HistoryData, Overview}, active_accounts::ActivitySnapshot, constants::HOUR_AS_NANOS, custom_types::{HolderBalance, HolderBalanceResponse, IndexerType, ProcessedTX, TimeStats, TotalHolderResponse}, directory::lookup_directory, fetch_data::{
+    account_tree::{fill_missing_days, get_account_last_days, GetAccountBalanceHistory, HistoryData, Overview}, active_accounts::ActivitySnapshot, constants::HOUR_AS_NANOS, custom_types::{HolderBalance, HolderBalanceResponse, IndexerType, ProcessedTX, TimeStats, TotalHolderResponse}, directory::lookup_directory, fetch_data::{
         dfinity_icp::{t1_impl_set_target_canister, SetTargetArgs}, 
         dfinity_icrc2::t2_impl_set_target_canister, meme_icrc::{add_pre_mint_to_ledger, t3_impl_set_target_canister}
     }, process_data::process_time_stats::{calculate_time_stats, StatsType}
@@ -278,89 +278,27 @@ pub fn get_activity_stats(days: u64) -> Vec<ActivitySnapshot> {
         s.borrow().as_ref().unwrap().activity_stats.get_daily_snapshots(days as usize)
     })
 }
-/// Update so I can see the logs
-#[update]
-fn get_account_history(args: GetAccountBalanceHistory) -> Vec<(u64, HistoryData)> {
+
+#[query]
+fn get_account_history(args: GetAccountBalanceHistory) -> Vec<HistoryData> {
     // check authorised
     RUNTIME_STATE.with(|s| { s.borrow().data.check_authorised(ic_cdk::caller().to_text()) });
-    api_count();
+    //api_count();
     let history = get_account_last_days(args.clone());
-    let filled_history = fill_missing_days(history, args.days);
+    let time = ic_time();
+    let filled_history = fill_missing_days(history, time, args.days);
     return filled_history;
 }
-fn fill_missing_days(mut history: Vec<(u64, HistoryData)>, days: u64) -> Vec<(u64, HistoryData)> {
-    history.sort_by_key(|&(day, _)| day);
 
-    let mut filled_history = Vec::new();
-    let mut last_data: Option<&HistoryData> = None;
-    let current_day = ic_time() / (86400 * 1_000_000_000);
-
-    for day_offset in 0..=days {
-        let day = current_day - day_offset;
-
-        match history.iter().find(|&&(d, _)| d == day) {
-            Some(&(_, ref data)) => {
-                filled_history.push((day, data.clone()));
-                last_data = Some(data);
-            }
-            None => {
-                if let Some(data) = last_data {
-                    filled_history.push((day, data.clone()));
-                }
-            }
-        }
+#[query]
+fn get_account_history_raw(args: GetAccountBalanceHistory) -> Vec<HistoryData> {
+    // check authorised
+    RUNTIME_STATE.with(|s| { s.borrow().data.check_authorised(ic_cdk::caller().to_text()) });
+    let history = get_account_last_days(args.clone());
+    let mut ret_vec: Vec<HistoryData> = Vec::new();
+    for item in history.iter() {
+        ret_vec.push(item.1.clone())
     }
-
-    filled_history
+    ret_vec
 }
-pub fn get_account_last_days(args: GetAccountBalanceHistory) -> Vec<(u64, HistoryData)> {
-    // get ac_ref
-    let ac_ref = STABLE_STATE.with(|s| {
-        s.borrow().as_ref().unwrap().directory_data.get_ref(&args.account)
-    });
-    match ac_ref {
-        Some(ac_ref_value) => {
-            let result = STABLE_STATE.with(|s| {
-                let mut items: HashMap<u64, HistoryData> = HashMap::new();
-                let mut days_collected = 0;
 
-                let current_day = ic_time() / (86400 * 1_000_000_000);
-                let start_day = if current_day > args.days { current_day - args.days } else { 0 };
-
-                let stable_state = s.borrow();
-                let state_ref = stable_state.as_ref().unwrap();
-
-                let history_map = if args.merge_subaccounts {
-                    &state_ref.principal_data.accounts_history
-                } else {
-                    &state_ref.account_data.accounts_history
-                };
-
-                for day in (start_day..=current_day).rev() {
-                    let key = (ac_ref_value, day);
-
-                    if let Some(history) = history_map.get(&key) {
-                        items.insert(day, history.clone());
-                        days_collected += 1;
-                        if days_collected >= args.days {
-                            break;
-                        }
-                    }
-                }
-                let msg = format!("final items: {items:?}");
-                log(msg);
-                let vec: Vec<(u64, HistoryData)> = items
-                    .iter()
-                    .map(|(&k, v)| (k, v.clone()))
-                    .collect();
-                return vec;
-            });
-            return result;
-        }
-        None => {
-            log("return type 0, no ac_ref");
-            let ret: Vec<(u64, HistoryData)> = Vec::new();
-            ret
-        }
-    }
-}

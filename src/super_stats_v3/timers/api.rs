@@ -3,7 +3,8 @@ use ic_cdk_macros::{update};
 use ic_cdk_timers::TimerId;
 
 use crate::{core::{runtime::RUNTIME_STATE, utils::log}, 
-stats::{fetch_data::dfinity_icp::SetTargetArgs, custom_types::IndexerType, api::init_target_ledger}};
+    stats::api::init_target_ledger
+};
 use super::{timers::{process_self_call, process_self_call2, start_processing_time_impl, schedule_data_processing}, state::TIMER_STATE};
 
 // #[update]
@@ -16,10 +17,10 @@ use super::{timers::{process_self_call, process_self_call2, start_processing_tim
 //     init_target_ledger(args, route).await
 // }
 
-#[update]
-async fn test_run(){
-    schedule_data_processing().await;
-}
+// #[update]
+// async fn test_run(){
+//     schedule_data_processing().await;
+// }
 
 // [][] -- TIMER METHODS -- [][]
 #[update]

@@ -32,11 +32,16 @@ pub fn ptx_test_data_for_history() -> Vec<ProcessedTX> {
             from_account: "Token Ledger".to_string(),
             to_account: "220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5".to_string(),
             tx_value: 100_000_000_000, 
-            tx_time: 86_400 * 1_000_000_000, // Day one
+            tx_time: 1, // day zero
             tx_fee: None,
             spender: None,
         }
     );
+
+    // Day 0:
+    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 100_000_000_000
+    // 0a1c18f29bda699bd646acb47f518b864cb2b35b944dc920b73325680b00b03c: 0
+    // 24879af686568e7e95846e91dc364ee910b7156ddcca9882e0e42b6cd1273da6: 0
     
     txs.push(
         ProcessedTX {
@@ -46,14 +51,14 @@ pub fn ptx_test_data_for_history() -> Vec<ProcessedTX> {
             from_account: "Token Ledger".to_string(),
             to_account: "220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5".to_string(),
             tx_value: 100_000_000_000, 
-            tx_time: 1 * 86_400 * 1_000_000_000, // Day one
+            tx_time: 1 * 86_400 * 1_000_000_000, // Day two
             tx_fee: None,
             spender: None,
         }
     );
 
     // Day 1:
-    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 100_000_000_000
+    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 200_000_000_000
     // 0a1c18f29bda699bd646acb47f518b864cb2b35b944dc920b73325680b00b03c: 0
     // 24879af686568e7e95846e91dc364ee910b7156ddcca9882e0e42b6cd1273da6: 0
 
@@ -72,7 +77,7 @@ pub fn ptx_test_data_for_history() -> Vec<ProcessedTX> {
     );
 
     // Day 2:
-    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 80_000_000_000
+    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 179_999_990_000 (including 10k tx fee)
     // 0a1c18f29bda699bd646acb47f518b864cb2b35b944dc920b73325680b00b03c: 20_000_000_000
     // 24879af686568e7e95846e91dc364ee910b7156ddcca9882e0e42b6cd1273da6: 0
 
@@ -91,7 +96,7 @@ pub fn ptx_test_data_for_history() -> Vec<ProcessedTX> {
     );
 
     // Day 3:
-    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 60_000_000_000
+    // 220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5: 159_999_980_000 (including 2 x 10k tx fees)
     // 0a1c18f29bda699bd646acb47f518b864cb2b35b944dc920b73325680b00b03c: 20_000_000_000
     // 24879af686568e7e95846e91dc364ee910b7156ddcca9882e0e42b6cd1273da6: 20_000_000_000
 

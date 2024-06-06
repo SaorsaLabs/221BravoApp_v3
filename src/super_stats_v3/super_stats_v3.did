@@ -111,9 +111,9 @@ type GetAccountBalanceHistoryArgs = record {
 
 type HistoryData = record {
     balance: nat;
+    day: nat64;
+    time_of_update: nat64;
 };
-
-type AccountHistory = vec record { nat64; HistoryData; };
 
 service : (text) -> {
     // CORE API
@@ -141,7 +141,8 @@ service : (text) -> {
     "get_account_overview": (text) -> (opt Overview) query;
     "get_principal_overview": (text) -> (opt Overview) query;
     "get_activity_stats": (nat64) -> (vec ActivitySnapshot) query;
-    "get_account_history": (GetAccountBalanceHistoryArgs) -> (AccountHistory);
+    "get_account_history": (GetAccountBalanceHistoryArgs) -> (vec HistoryData) query;
+    "get_account_history_raw": (GetAccountBalanceHistoryArgs) -> (vec HistoryData) query;
 
     // TIMER API
     "start_processing_timer": (nat64) -> (text); // in seconds

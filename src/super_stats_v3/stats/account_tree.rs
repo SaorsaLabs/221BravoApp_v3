@@ -1,19 +1,15 @@
 use std::ops::Add;
-
-use candid::{CandidType, Nat};
+use candid::CandidType;
 use ic_stable_memory::{derive::{StableType, AsFixedSizeBytes}, collections::{SBTreeMap, SVec}};
-use num_bigint::BigUint;
 use serde::{Deserialize, Serialize};
-
-use crate::core::{runtime::RUNTIME_STATE, utils::log, stable_memory::Main, types::IDKey};
-
-use super::custom_types::{SmallTX, ProcessedTX};
+use crate::core::{runtime::RUNTIME_STATE, stable_memory::{Main, STABLE_STATE}, utils::log};
+use super::custom_types::SmallTX;
 
 // Stable Store of account indexed data
 #[derive(StableType, AsFixedSizeBytes, Debug, Default)]
 pub struct AccountTree{
     pub accounts: SBTreeMap<u64, Overview>,
-    pub accounts_history: SBTreeMap<(u64, u64), HistoryData>,
+    pub accounts_history: SBTreeMap<u64, HistoryCollection>,
     count: u64, // not used
     last_updated: u64, // not used
 }
@@ -21,34 +17,62 @@ pub struct AccountTree{
 impl AccountTree {
 
     fn update_history_balance(&mut self, account_ref: &u64, stx: &SmallTX, tx_type: TransactionType) {
-        let day_of_transaction = stx.time / (86400 * 1_000_000_000);
-        let account_history_key = (*account_ref, day_of_transaction);
-
+        let day_sum = stx.time as f64/ (86400f64 * 1_000_000_000f64);
+        let day_of_transaction = day_sum.floor() as u64;
         let fee: u128;
         if let Some(f) = stx.fee { fee = f } else {
             fee = RUNTIME_STATE.with(|s|{s.borrow().data.get_ledger_fee()})
         };
-        
-        if !self.accounts_history.contains_key(&account_history_key) && tx_type == TransactionType::In {
-            let previous_day_balance = self.accounts_history.get(&(*account_ref, day_of_transaction - 1)).map_or(0, |previous_day| previous_day.balance);
 
-            let new_balance = match tx_type {
-                TransactionType::In => previous_day_balance.saturating_add(stx.value),
-                TransactionType::Out => previous_day_balance.saturating_sub(stx.value).saturating_sub(fee)
-            };
-
-            self.accounts_history.insert(account_history_key, HistoryData {
-                balance: new_balance,
-            }).expect("Storage is full");
-            
-        }
-        else if let Some(mut ach) = self.accounts_history.get_mut(&account_history_key) {
-            ach.balance = match tx_type {
-                TransactionType::In => ach.balance.saturating_add(stx.value),
-                TransactionType::Out => ach.balance.saturating_sub(stx.value).saturating_sub(fee)
-            };
-            // Should we update further days balance here as well?
-            // Will we have a case where we process a new transaction before an old transaction? 
+        // new account
+        if !self.accounts_history.contains_key(&account_ref) {
+            if tx_type == TransactionType::In {
+                let mut history_vec: SVec<HistoryData> = SVec::new();
+                let init_balance = HistoryData{ day: day_of_transaction, balance: stx.value, time_of_update: stx.time };
+                history_vec.push(init_balance).expect("memory is full");
+                let new_collection = HistoryCollection{ collection: history_vec };
+                self.accounts_history.insert(*account_ref, new_collection).expect("Storage is full");;
+            } else {
+                // Cant send tokens from a new account (0 balance!)
+                let er = format!("ERROR - fn update_history_balance (block {}) is trying to debit an account which doesn't exist!", stx.block);
+                log(er);
+            }
+        } else {
+        // existing account
+            if let Some(mut ach) = self.accounts_history.get_mut(account_ref) {
+                // check for matching day
+                let mut found = false;
+                let mut found_idx = 0;
+                let mut idx: usize = 0;
+                for elem in ach.collection.iter() {
+                    if elem.day == day_of_transaction {
+                        found = true;
+                        found_idx = idx;
+                        break;
+                    }
+                    idx += 1;
+                }
+                match found {
+                    true => {
+                        // update current day balance
+                        let mut entry = ach.collection.get_mut(found_idx).unwrap(); 
+                        entry.balance = match tx_type {
+                            TransactionType::In => entry.balance.saturating_add(stx.value),
+                            TransactionType::Out => entry.balance.saturating_sub(stx.value).saturating_sub(fee)
+                        };
+                    },
+                    false => {
+                        // start new day
+                        let last_entry = ach.collection.len()-1;
+                        let last_balance = ach.collection.get(last_entry).unwrap().balance;                         
+                        let new_balance = match tx_type {
+                            TransactionType::In => last_balance.saturating_add(stx.value),
+                            TransactionType::Out => last_balance.saturating_sub(stx.value).saturating_sub(fee)
+                        };
+                        ach.collection.push(HistoryData { day: day_of_transaction, balance: new_balance, time_of_update: stx.time }).expect("Storage is full");
+                    }
+                }
+            }
         }
     }
 
@@ -121,17 +145,26 @@ impl AccountTree {
 
 #[derive(CandidType, StableType, Deserialize, Serialize, Clone, Default, AsFixedSizeBytes, Debug)]
 pub struct HistoryData {
+    pub day: u64,
     pub balance: u128,
+    pub time_of_update: u64
 }
 impl Add for HistoryData {
     type Output = HistoryData;
 
     fn add(self, other: Self) -> Self::Output {
         HistoryData {
+            day: self.day,
             balance: self.balance + other.balance,
+            time_of_update: self.time_of_update
         }
     }
 }
+#[derive(StableType, AsFixedSizeBytes, Debug, Default)]
+pub struct HistoryCollection{
+    pub collection: SVec<HistoryData> 
+}
+
 // TODO: Move out of here
 #[derive(CandidType, StableType, Deserialize, Serialize, Clone, Default, Debug)]
 pub struct GetAccountBalanceHistory {
@@ -184,42 +217,87 @@ pub struct AccountData {
     }
  }
 
- // IMPL 
- impl Main {
-    pub fn get_overview_by_id(&self, id_string: &String) -> Option<Overview> {
-        match self.directory_data.get_ref(id_string) {
-            Some(ref_value) => {
-                match self.account_data.accounts.get(&ref_value) {
-                    Some(ac_value) => { 
-                        let ov = Overview{
-                            first_active: ac_value.first_active,
-                            last_active: ac_value.last_active,
-                            sent: ac_value.sent,
-                            received: ac_value.received,
-                            balance: ac_value.balance,
-                        };
-                        return Some(ov);
-                    },
-                    None => {return None}
+
+pub fn fill_missing_days(mut history: Vec<(u64, HistoryData)>, time_now: u64, days: u64) -> Vec<HistoryData> {
+    if history.len() == 0 { return Vec::new() }
+    history.sort_by_key(|&(day, _)| day);
+    let last_entry = history.last().unwrap(); 
+    let mut filled_history = Vec::new();
+    let mut last_data: Option<&HistoryData> = None;
+    let day_sum =  time_now as f64/ (86400f64 * 1_000_000_000f64);
+    let current_day = day_sum.floor() as u64;
+    let mut last_day = 1;
+
+    for day_offset in 0..=days {
+        if last_day == 0 { break }
+        let day = current_day.saturating_sub(day_offset);
+        match history.iter().find(|&&(d, _)| d == day) {
+            Some(&(_, ref data)) => {
+                filled_history.push((data.clone()));
+                last_data = Some(data);
+            }
+            None => {
+                if let Some(data) = last_data {
+                    filled_history.push((data.clone()));
+                } else {
+                    // day is prior to last balance change
+                    filled_history.push(
+                        HistoryData{ day: day.clone(), balance: last_entry.1.balance.clone(), time_of_update: last_entry.1.time_of_update }
+                    );
                 }
-            },
-            None => { return None },
-        } 
+            }
+        }
+        last_day = day;
     }
 
-    pub fn get_overview_by_ref(&self, id_ref: &u64) -> Option<Overview> {
-        match self.account_data.accounts.get(&id_ref) {
-            Some(ac_value) => { 
-                let ov = Overview{
-                    first_active: ac_value.first_active,
-                    last_active: ac_value.last_active,
-                    sent: ac_value.sent,
-                    received: ac_value.received,
-                    balance: ac_value.balance,
+    filled_history
+}
+
+// for get_account_history method
+pub fn get_account_last_days(args: GetAccountBalanceHistory) -> Vec<(u64, HistoryData)> {
+    // get ac_ref
+    let ac_ref = STABLE_STATE.with(|s| {
+        s.borrow().as_ref().unwrap().directory_data.get_ref(&args.account)
+    });
+    match ac_ref {
+        Some(ac_ref_value) => {
+            let result = STABLE_STATE.with(|s| {
+                let mut items: Vec<(u64, HistoryData)> = Vec::new();
+
+                let stable_state = s.borrow();
+                let state_ref = stable_state.as_ref().unwrap();
+
+                let history_map = if args.merge_subaccounts {
+                    &state_ref.principal_data.accounts_history
+                } else {
+                    &state_ref.account_data.accounts_history
                 };
-                return Some(ov);
-            },
-            None => {return None}
+
+                // copy from SVec into Vec
+                if let Some(balance_data) = history_map.get(&ac_ref_value){
+                    for db in balance_data.collection.iter() {
+                        items.push((db.day.clone(), db.clone()));
+                    }
+                }
+
+                // take latest X entries
+                let req_days = args.days as usize;
+                let res_vec = if req_days <= items.len() {
+                    items.split_off(items.len() - req_days)
+                } else {
+                    // return all (data is less than args.days)
+                    return items;
+                };
+                // return latest args.days number of entries. 
+                return res_vec; 
+            });
+            return result;
+        }
+        None => {
+           // log("return type 0, no ac_ref"); removed for testing
+            let ret: Vec<(u64, HistoryData)> = Vec::new();
+            ret
         }
     }
 }
+
