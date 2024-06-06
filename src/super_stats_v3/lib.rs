@@ -7,7 +7,7 @@ mod test_data;
 mod tests {
     use crate::{
         core::{constants::D1_AS_NANOS, runtime::RUNTIME_STATE, stable_memory::STABLE_STATE, types::IDKey}, 
-        stats::{account_tree::GetAccountBalanceHistory, api::{get_account_last_days, get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, process_data::{
+        stats::{account_tree::{fill_missing_days, get_account_last_days, GetAccountBalanceHistory}, api::{ get_account_overview, get_principal_overview, get_top_account_holders, get_top_principal_holders}, constants::{DAY_AS_NANOS, HOUR_AS_NANOS}, custom_types::{IndexerType, ProcessedTX}, fetch_data::dfinity_icrc2_types::DEFAULT_SUBACCOUNT, process_data::{
             process_index::{process_smtx_to_index, process_smtx_to_principal_index}, process_time_stats::{calculate_time_stats, top_x_by_txvalue, StatsType}, 
             small_tx::{processedtx_to_principal_only_smalltx, processedtx_to_smalltx}}, utils::{nearest_day_start, nearest_past_hour, parse_icrc_account, principal_subaccount_to_string}}, 
             test_data::{self, ptx_test_data, ptx_test_data_for_history, test_state_init}
@@ -341,7 +341,6 @@ mod tests {
         let pr_ov = get_principal_overview("okuxs-wiaaa-aaaak-qidcq-cai".to_string());
         let pr_ov2 = pr_ov.unwrap();
         assert_eq!(pr_ov2.balance, 300290350001);
-
     }
 
     #[test]
@@ -376,15 +375,27 @@ mod tests {
 
         let account_one_args = GetAccountBalanceHistory {
             account: "220c3a33f90601896e26f76fa619fe288742df1fa75426edfaf759d39f2455a5".to_string(),
-            days: 5,
+            days: 10,
             merge_subaccounts: false,
         };
-        let account_one_history = get_account_last_days(account_one_args);
-        // let msg = format!("Account one history: {account_one_history:?}");
-        // log(msg);
-        let first_day = account_one_history.first().unwrap();
-        assert_eq!(first_day.0, 1);
-        assert_eq!(first_day.1.balance, 100_000_000_000);
+
+        let account_one_history = get_account_last_days(account_one_args.clone());
+        let time = 8 * 86_400 * 1_000_000_000; 
+        let full_history = fill_missing_days(account_one_history, time, account_one_args.days);
+
+        assert_eq!(full_history.len(), 9); // request 10 but day 'today' is 8.. count from 0 makes 9 in total.  
+
+        let init_value = full_history.last().unwrap();
+        assert_eq!(init_value.balance, 100_000_000_000); // first balance
+
+        let seccond_day =full_history[7].clone();
+        assert_eq!(seccond_day.balance, 200_000_000_000); // next day
+
+        let final_value = full_history[0].clone(); 
+        assert_eq!(final_value.balance, 159_999_980_000);
+        assert_eq!(final_value.day, 8);
+        assert_eq!(final_value.time_of_update, 3 * 86_400 * 1_000_000_000); // last update was day 3
+        
     }
     
 }
